@@ -1,0 +1,97 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+/**
+ * Controller untuk modul booking pelanggan.
+ *
+ * Menyediakan daftar jadwal, form booking, dan penyimpanan booking baru.
+ */
+class Booking extends CI_Controller
+{
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->model(['Court_model','Booking_model']);
+        $this->load->library(['session','form_validation']);
+        $this->load->helper(['url','form']);
+    }
+
+    /**
+     * Tampilkan jadwal ketersediaan lapangan untuk tanggal tertentu.
+     */
+    public function index()
+    {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('auth/login');
+        }
+        $date = $this->input->get('date');
+        if (!$date) {
+            $date = date('Y-m-d');
+        }
+        $data['date'] = $date;
+        $data['courts'] = $this->Court_model->get_all();
+        $data['bookings'] = $this->Booking_model->get_by_date($date);
+        $this->load->view('booking/index', $data);
+    }
+
+    /**
+     * Form booking baru.
+     */
+    public function create()
+    {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('auth/login');
+        }
+        $data['courts'] = $this->Court_model->get_all();
+        $this->load->view('booking/create', $data);
+    }
+
+    /**
+     * Simpan booking baru. Memeriksa bentrok jadwal.
+     */
+    public function store()
+    {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('auth/login');
+        }
+        $this->form_validation->set_rules('id_court', 'Lapangan', 'required');
+        $this->form_validation->set_rules('tanggal_booking', 'Tanggal', 'required');
+        $this->form_validation->set_rules('jam_mulai', 'Jam Mulai', 'required');
+        $this->form_validation->set_rules('jam_selesai', 'Jam Selesai', 'required');
+
+        if ($this->form_validation->run() === TRUE) {
+            $id_court = $this->input->post('id_court');
+            $date     = $this->input->post('tanggal_booking');
+            $start    = $this->input->post('jam_mulai');
+            $end      = $this->input->post('jam_selesai');
+            $durasi   = (strtotime($end) - strtotime($start)) / 3600;
+            if ($durasi <= 0) {
+                $this->session->set_flashdata('error', 'Jam selesai harus lebih besar dari jam mulai.');
+                redirect('booking/create');
+            }
+            // Cek ketersediaan
+            if (!$this->Booking_model->is_available($id_court, $date, $start, $end)) {
+                $this->session->set_flashdata('error', 'Lapangan sudah terbooking pada jam tersebut.');
+                redirect('booking/create');
+            }
+            $court = $this->Court_model->get_by_id($id_court);
+            $total = $court->harga_per_jam * $durasi;
+            $data = [
+                'id_user'          => $this->session->userdata('id'),
+                'id_court'         => $id_court,
+                'tanggal_booking'  => $date,
+                'jam_mulai'        => $start,
+                'jam_selesai'      => $end,
+                'durasi'           => $durasi,
+                'total_harga'      => $total,
+                'status_booking'   => 'pending',
+                'status_pembayaran'=> 'belum_bayar'
+            ];
+            $this->Booking_model->insert($data);
+            $this->session->set_flashdata('success', 'Booking berhasil disimpan, silakan lakukan pembayaran.');
+            redirect('booking');
+            return;
+        }
+        $this->create();
+    }
+}
