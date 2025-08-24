@@ -17,6 +17,7 @@
                 <th>Jam Mulai</th>
                 <th>Jam Selesai</th>
                 <th>Status</th>
+                <th>Keterangan</th>
                 <?php if ($role === 'kasir'): ?>
                     <th>Aksi</th>
                 <?php endif; ?>
@@ -30,6 +31,7 @@
                 <td><?php echo htmlspecialchars($b->jam_mulai); ?></td>
                 <td><?php echo htmlspecialchars($b->jam_selesai); ?></td>
                 <td><?php echo htmlspecialchars($b->status_booking); ?></td>
+                <td><?php echo htmlspecialchars($b->keterangan); ?></td>
                 <?php if ($role === 'kasir'): ?>
                     <td>
                         <?php if ($b->status_booking === 'pending'): ?>
@@ -39,15 +41,24 @@
                             </form>
                             <form method="post" action="<?php echo site_url('booking/update_status/' . $b->id); ?>" style="display:inline-block">
                                 <input type="hidden" name="status" value="batal">
+
+                                <input type="text" name="keterangan" class="form-control form-control-sm mb-1" placeholder="Keterangan" value="<?php echo htmlspecialchars($b->keterangan); ?>">
+
                                 <button type="submit" class="btn btn-sm btn-danger">Batal</button>
                             </form>
                         <?php elseif ($b->status_booking === 'confirmed'): ?>
                             <form method="post" action="<?php echo site_url('booking/update_status/' . $b->id); ?>" style="display:inline-block">
                                 <input type="hidden" name="status" value="selesai">
+
+                                <input type="text" name="keterangan" class="form-control form-control-sm mb-1" placeholder="Keterangan" value="<?php echo htmlspecialchars($b->keterangan); ?>">
+
                                 <button type="submit" class="btn btn-sm btn-success">Selesai</button>
                             </form>
                             <form method="post" action="<?php echo site_url('booking/update_status/' . $b->id); ?>" style="display:inline-block">
                                 <input type="hidden" name="status" value="batal">
+
+                                <input type="text" name="keterangan" class="form-control form-control-sm mb-1" placeholder="Keterangan" value="<?php echo htmlspecialchars($b->keterangan); ?>">
+
                                 <button type="submit" class="btn btn-sm btn-danger">Batal</button>
                             </form>
                         <?php endif; ?>
