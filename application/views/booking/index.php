@@ -38,17 +38,17 @@
                                 <button type="submit" class="btn btn-sm btn-primary">Confirm</button>
                             </form>
                             <form method="post" action="<?php echo site_url('booking/update_status/' . $b->id); ?>" style="display:inline-block">
-                                <input type="hidden" name="status" value="cancelled">
-                                <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
+                                <input type="hidden" name="status" value="batal">
+                                <button type="submit" class="btn btn-sm btn-danger">Batal</button>
                             </form>
                         <?php elseif ($b->status_booking === 'confirmed'): ?>
                             <form method="post" action="<?php echo site_url('booking/update_status/' . $b->id); ?>" style="display:inline-block">
-                                <input type="hidden" name="status" value="completed">
-                                <button type="submit" class="btn btn-sm btn-success">Complete</button>
+                                <input type="hidden" name="status" value="selesai">
+                                <button type="submit" class="btn btn-sm btn-success">Selesai</button>
                             </form>
                             <form method="post" action="<?php echo site_url('booking/update_status/' . $b->id); ?>" style="display:inline-block">
-                                <input type="hidden" name="status" value="cancelled">
-                                <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
+                                <input type="hidden" name="status" value="batal">
+                                <button type="submit" class="btn btn-sm btn-danger">Batal</button>
                             </form>
                         <?php endif; ?>
                     </td>
