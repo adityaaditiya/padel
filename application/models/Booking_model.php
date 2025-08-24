@@ -36,6 +36,11 @@ class Booking_model extends CI_Model
         return $conflict == 0;
     }
 
+    /**
+     * Update booking record by ID.
+     *
+     * Supports updating status_booking and other fields.
+     */
     public function update($id, $data)
     {
         return $this->db->where('id', $id)->update($this->table, $data);
