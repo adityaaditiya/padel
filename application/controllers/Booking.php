@@ -107,12 +107,24 @@ class Booking extends CI_Controller
         if ($role !== 'kasir') {
             redirect('dashboard');
         }
-        $status = $this->input->post('status');
-        $allowed = ['confirmed','cancelled','completed'];
-        if (!in_array($status, $allowed)) {
+        $status     = $this->input->post('status');
+        $keterangan = $this->input->post('keterangan');
+        // Izinkan baik istilah bahasa Inggris maupun Indonesia
+        $allowed = [
+            'confirmed' => 'confirmed',
+            'cancelled' => 'batal',
+            'completed' => 'selesai',
+            'batal'     => 'batal',
+            'selesai'   => 'selesai'
+        ];
+        if (!array_key_exists($status, $allowed)) {
             show_error('Status tidak valid', 400);
         }
-        $this->Booking_model->update($id, ['status_booking' => $status]);
+        $data = ['status_booking' => $allowed[$status]];
+        if ($keterangan !== null) {
+            $data['keterangan'] = $keterangan;
+        }
+        $this->Booking_model->update($id, $data);
         $this->session->set_flashdata('success', 'Status booking diperbarui.');
         redirect('booking');
     }
