@@ -1,4 +1,5 @@
 <?php $this->load->view('templates/header'); ?>
+<?php $role = $this->session->userdata('role'); ?>
 <h2>Jadwal Booking Lapangan</h2>
 <form method="get" class="form-inline mb-3">
     <label for="date" class="mr-2">Tanggal:</label>
@@ -16,6 +17,9 @@
                 <th>Jam Mulai</th>
                 <th>Jam Selesai</th>
                 <th>Status</th>
+                <?php if ($role === 'kasir'): ?>
+                    <th>Aksi</th>
+                <?php endif; ?>
             </tr>
         </thead>
         <tbody>
@@ -26,6 +30,29 @@
                 <td><?php echo htmlspecialchars($b->jam_mulai); ?></td>
                 <td><?php echo htmlspecialchars($b->jam_selesai); ?></td>
                 <td><?php echo htmlspecialchars($b->status_booking); ?></td>
+                <?php if ($role === 'kasir'): ?>
+                    <td>
+                        <?php if ($b->status_booking === 'pending'): ?>
+                            <form method="post" action="<?php echo site_url('booking/update_status/' . $b->id); ?>" style="display:inline-block">
+                                <input type="hidden" name="status" value="confirmed">
+                                <button type="submit" class="btn btn-sm btn-primary">Confirm</button>
+                            </form>
+                            <form method="post" action="<?php echo site_url('booking/update_status/' . $b->id); ?>" style="display:inline-block">
+                                <input type="hidden" name="status" value="cancelled">
+                                <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
+                            </form>
+                        <?php elseif ($b->status_booking === 'confirmed'): ?>
+                            <form method="post" action="<?php echo site_url('booking/update_status/' . $b->id); ?>" style="display:inline-block">
+                                <input type="hidden" name="status" value="completed">
+                                <button type="submit" class="btn btn-sm btn-success">Complete</button>
+                            </form>
+                            <form method="post" action="<?php echo site_url('booking/update_status/' . $b->id); ?>" style="display:inline-block">
+                                <input type="hidden" name="status" value="cancelled">
+                                <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
+                            </form>
+                        <?php endif; ?>
+                    </td>
+                <?php endif; ?>
             </tr>
         <?php endforeach; ?>
         </tbody>
