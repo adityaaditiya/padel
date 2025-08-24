@@ -107,8 +107,12 @@ class Booking extends CI_Controller
         if ($role !== 'kasir') {
             redirect('dashboard');
         }
+//codex/create-latest-database-for-import-89aicw
         $status     = $this->input->post('status');
         $keterangan = $this->input->post('keterangan');
+
+        $status = $this->input->post('status');
+//main
         // Izinkan baik istilah bahasa Inggris maupun Indonesia
         $allowed = [
             'confirmed' => 'confirmed',
@@ -120,11 +124,15 @@ class Booking extends CI_Controller
         if (!array_key_exists($status, $allowed)) {
             show_error('Status tidak valid', 400);
         }
+//codex/create-latest-database-for-import-89aicw
         $data = ['status_booking' => $allowed[$status]];
         if ($keterangan !== null) {
             $data['keterangan'] = $keterangan;
         }
         $this->Booking_model->update($id, $data);
+
+        $this->Booking_model->update($id, ['status_booking' => $allowed[$status]]);
+//main
         $this->session->set_flashdata('success', 'Status booking diperbarui.');
         redirect('booking');
     }
