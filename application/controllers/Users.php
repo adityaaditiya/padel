@@ -30,6 +30,19 @@ class Users extends CI_Controller
     }
 
     /**
+
+     * Owner only: edit data user lain, termasuk mengganti password dan role.
+     */
+    public function edit($id)
+    {
+        if ($this->session->userdata('role') !== 'owner') {
+            show_error('Forbidden', 403);
+        }
+
+        // Gunakan logika yang sama dengan profile() tetapi memaksa ID yang dipilih
+        return $this->profile($id);
+    }
+
      * Edit profil pengguna. Jika $id null, edit profil sendiri.
      * Owner dapat mengedit semua user termasuk role.
      */
@@ -95,6 +108,9 @@ class Users extends CI_Controller
         }
 
         $data['user'] = $user;
+
+        $data['editing_self'] = ((int)$id === (int)$current_id);
+
         $this->load->view('users/profile', $data);
     }
 }
