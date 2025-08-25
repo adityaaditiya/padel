@@ -35,6 +35,74 @@ class Report_model extends CI_Model
     }
 
     /**
+     * Mengambil detail pemasukan dan pengeluaran berdasarkan booking dan penjualan.
+     *
+     * @param string $start Tanggal awal (YYYY-MM-DD)
+     * @param string $end   Tanggal akhir (YYYY-MM-DD)
+     * @return array        Detail transaksi dan total uang masuk/keluar
+     */
+    public function get_financial_report($start, $end)
+    {
+        $details = [];
+
+        // Booking: hanya status confirmed/selesai masuk, batal sebagai uang keluar
+        $this->db->select('id, tanggal_booking, total_harga, status_booking');
+        $this->db->from('bookings');
+        $this->db->where('tanggal_booking >=', $start);
+        $this->db->where('tanggal_booking <=', $end);
+        $bookings = $this->db->get()->result();
+
+        foreach ($bookings as $b) {
+            if (in_array($b->status_booking, ['confirmed', 'selesai'])) {
+                $details[] = [
+                    'tanggal'     => $b->tanggal_booking,
+                    'keterangan'  => 'Booking #' . $b->id,
+                    'uang_masuk'  => (float) $b->total_harga,
+                    'uang_keluar' => 0,
+                ];
+            } elseif ($b->status_booking === 'batal') {
+                $details[] = [
+                    'tanggal'     => $b->tanggal_booking,
+                    'keterangan'  => 'Booking batal #' . $b->id,
+                    'uang_masuk'  => 0,
+                    'uang_keluar' => (float) $b->total_harga,
+                ];
+            }
+        }
+
+        // Penjualan produk masuk sebagai uang masuk
+        $this->db->select('id, total_belanja, tanggal_transaksi');
+        $this->db->from('sales');
+        $this->db->where('tanggal_transaksi >=', $start);
+        $this->db->where('tanggal_transaksi <=', $end . ' 23:59:59');
+        $sales = $this->db->get()->result();
+
+        foreach ($sales as $s) {
+            $details[] = [
+                'tanggal'     => date('Y-m-d', strtotime($s->tanggal_transaksi)),
+                'keterangan'  => 'Penjualan #' . $s->id,
+                'uang_masuk'  => (float) $s->total_belanja,
+                'uang_keluar' => 0,
+            ];
+        }
+
+        // Urutkan berdasarkan tanggal
+        usort($details, function ($a, $b) {
+            return strcmp($a['tanggal'], $b['tanggal']);
+        });
+
+        $total_masuk  = array_sum(array_column($details, 'uang_masuk'));
+        $total_keluar = array_sum(array_column($details, 'uang_keluar'));
+
+        return [
+            'details'      => $details,
+            'total_masuk'  => $total_masuk,
+            'total_keluar' => $total_keluar,
+            'saldo'        => $total_masuk - $total_keluar,
+        ];
+    }
+
+    /**
      * Ringkasan bisnis untuk owner: jumlah booking, jumlah pelanggan, dan produk terlaris.
      */
     public function get_business_summary($start, $end)
