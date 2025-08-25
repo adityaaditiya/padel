@@ -1,0 +1,11 @@
+CREATE DATABASE IF NOT EXISTS kresnog2_padel_db;
+USE kresnog2_padel_db;
+
+CREATE TABLE cash_transactions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  tanggal DATETIME NOT NULL,
+  type ENUM('in','out') NOT NULL,
+  category ENUM('BON OPERASIONAL','BON TRANSFER BANK','DEBIT CREDIT CARD','MODAL') NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  note TEXT
+);

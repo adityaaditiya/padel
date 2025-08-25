@@ -1,3 +1,9 @@
+<?php
+$ci =& get_instance();
+$ci->load->model('Store_status_model');
+$store_date = $ci->Store_status_model->get_store_date();
+$formatted_store_date = $store_date ? date('d-m-Y', strtotime($store_date)) : date('d-m-Y');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,6 +60,11 @@
         </ul>
         <ul class="navbar-nav">
             <?php if ($this->session->userdata('logged_in')): ?>
+                <li class="nav-item">
+                    <span class="navbar-text mr-3 px-2 py-1 border rounded d-inline-block">
+                        Tanggal Toko: <?php echo htmlspecialchars($formatted_store_date); ?>
+                    </span>
+                </li>
                 <li class="nav-item"><span class="navbar-text mr-3">Halo, <?php echo htmlspecialchars($this->session->userdata('nama_lengkap')); ?></span></li>
                 <li class="nav-item"><a class="nav-link" href="<?php echo site_url('users/profile'); ?>">Profil</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?php echo site_url('auth/logout'); ?>">Logout</a></li>
