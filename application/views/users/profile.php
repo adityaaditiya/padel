@@ -1,7 +1,7 @@
 <?php $this->load->view('templates/header'); ?>
 
 <h1><?php echo !empty($editing_self) ? 'Edit Profil' : 'Edit User'; ?></h1>
-<h1>Edit Profil</h1>
+
 <?php if ($this->session->flashdata('success')): ?>
     <div class="alert alert-success"><?php echo $this->session->flashdata('success'); ?></div>
 <?php endif; ?>
