@@ -10,12 +10,26 @@ class Booking_model extends CI_Model
 
     public function get_by_date($date)
     {
-        return $this->db->get_where($this->table, ['tanggal_booking' => $date])->result();
+        $this->db->where('tanggal_booking', $date);
+        $this->db->where('status_booking !=', 'batal');
+        return $this->db->get($this->table)->result();
     }
 
     public function insert($data)
     {
         return $this->db->insert($this->table, $data);
+    }
+
+    /**
+     * Ambil daftar booking yang dibatalkan.
+     */
+    public function get_cancelled($date = null)
+    {
+        $this->db->where('status_booking', 'batal');
+        if ($date) {
+            $this->db->where('tanggal_booking', $date);
+        }
+        return $this->db->order_by('tanggal_booking', 'desc')->get($this->table)->result();
     }
 
     /**
@@ -28,12 +42,16 @@ class Booking_model extends CI_Model
          * Cek ketersediaan jadwal. Bentrok jika rentang waktu overlap:
          * tidak bentrok jika (jam_selesai <= start) OR (jam_mulai >= end)
          * maka kondisi bentrok adalah negasi dari kondisi tersebut.
+         * Abaikan booking yang sudah dibatalkan.
          */
         $this->db->where('id_court', $id_court);
         $this->db->where('tanggal_booking', $date);
-        $this->db->where("NOT (jam_selesai <= '{$start}' OR jam_mulai >= '{$end}')", NULL, FALSE);
-        $conflict = $this->db->get($this->table)->num_rows();
-        return $conflict == 0;
+        $this->db->where('status_booking !=', 'batal');
+        $this->db->group_start();
+        $this->db->where('jam_selesai >', $start);
+        $this->db->where('jam_mulai <', $end);
+        $this->db->group_end();
+        return $this->db->get($this->table)->num_rows() === 0;
     }
 
     /**
