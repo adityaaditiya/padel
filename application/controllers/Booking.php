@@ -111,22 +111,6 @@ class Booking extends CI_Controller
         $status     = $this->input->post('status');
         $keterangan = $this->input->post('keterangan');
 
-
-        $status     = $this->input->post('status');
-        $keterangan = $this->input->post('keterangan');
-
-// codex/create-latest-database-for-import-56yrx7
-        $status     = $this->input->post('status');
-        $keterangan = $this->input->post('keterangan');
-
-//codex/create-latest-database-for-import-89aicw
-        $status     = $this->input->post('status');
-        $keterangan = $this->input->post('keterangan');
-
-        $status = $this->input->post('status');
-//main
-// main
-
         // Izinkan baik istilah bahasa Inggris maupun Indonesia
         $allowed = [
             'confirmed' => 'confirmed',
@@ -139,20 +123,8 @@ class Booking extends CI_Controller
             show_error('Status tidak valid', 400);
         }
 
-
-// codex/create-latest-database-for-import-56yrx7
-
         $normalized = $allowed[$status];
-        $data       = ['status_booking' => $normalized];
-        if ($normalized === 'confirmed') {
-            $data['keterangan'] = 'pembayaran sudah di konfirmasi';
-        } elseif ($keterangan !== null) {
-            $data['keterangan'] = $keterangan;
-        }
-        $this->Booking_model->update($id, $data);
-
-
-//codex/create-latest-database-for-import-89aicw
+       
         $data = ['status_booking' => $allowed[$status]];
         if ($keterangan !== null) {
             $data['keterangan'] = $keterangan;
@@ -160,8 +132,6 @@ class Booking extends CI_Controller
         $this->Booking_model->update($id, $data);
 
         $this->Booking_model->update($id, ['status_booking' => $allowed[$status]]);
-//main
-// main
 
         $this->session->set_flashdata('success', 'Status booking diperbarui.');
         redirect('booking');
@@ -176,12 +146,14 @@ class Booking extends CI_Controller
             redirect('auth/login');
         }
 
-
         $date = $this->input->get('date');
-        $data['date'] = $date;
-        $data['bookings'] = $date ? $this->Booking_model->get_cancelled($date) : [];
+        if (!$date) {
+            $date = $this->input->get('tanggal');
+        }
 
-        $data['bookings'] = $this->Booking_model->get_cancelled();
+        $data['date'] = $date;
+        $data['bookings'] = !empty($date) ? $this->Booking_model->get_cancelled($date) : [];
+
 
         $this->load->view('booking/cancelled', $data);
     }

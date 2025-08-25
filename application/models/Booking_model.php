@@ -27,15 +27,13 @@ class Booking_model extends CI_Model
     public function get_cancelled($date = null)
     {
         $this->db->where('status_booking', 'batal');
-        if ($date) {
+        if (!empty($date)) {
             $this->db->where('tanggal_booking', $date);
         }
+        return $this->db->order_by('tanggal_booking', 'desc')
+                        ->get($this->table)
+                        ->result();
 
-    public function get_cancelled()
-    {
-        $this->db->where('status_booking', 'batal');
-
-        return $this->db->order_by('tanggal_booking', 'desc')->get($this->table)->result();
     }
 
     /**
