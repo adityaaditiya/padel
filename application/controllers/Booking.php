@@ -120,8 +120,10 @@ class Booking extends CI_Controller
         if ($role !== 'kasir') {
             redirect('dashboard');
         }
+
         $status     = $this->input->post('status');
         $keterangan = $this->input->post('keterangan');
+
         // Izinkan baik istilah bahasa Inggris maupun Indonesia
         $allowed = [
             'confirmed' => 'confirmed',
@@ -133,6 +135,7 @@ class Booking extends CI_Controller
         if (!array_key_exists($status, $allowed)) {
             show_error('Status tidak valid', 400);
         }
+
         $normalized = $allowed[$status];
         $data       = ['status_booking' => $normalized];
         if ($normalized === 'confirmed') {
@@ -141,6 +144,7 @@ class Booking extends CI_Controller
             $data['keterangan'] = $keterangan;
         }
         $this->Booking_model->update($id, $data);
+
         $this->session->set_flashdata('success', 'Status booking diperbarui.');
         redirect('booking');
     }
