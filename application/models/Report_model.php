@@ -67,7 +67,6 @@ class Report_model extends CI_Model
                 'saldo'        => $total_masuk - $total_keluar,
             ];
         }
-
         if ($category === 'booking') {
             $this->db->select('id, tanggal_booking, total_harga');
             $this->db->from('bookings');
