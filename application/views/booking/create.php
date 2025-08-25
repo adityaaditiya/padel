@@ -5,6 +5,7 @@
 <?php endif; ?>
 <?php echo validation_errors('<div class="alert alert-danger">', '</div>'); ?>
 <form method="post" action="<?php echo site_url('booking/store'); ?>">
+    <input type="hidden" name="device_date" id="device_date">
     <div class="form-group">
         <label for="id_court">Lapangan</label>
         <select name="id_court" id="id_court" class="form-control" required>
@@ -29,4 +30,7 @@
     <button type="submit" class="btn btn-primary">Simpan Booking</button>
     <a href="<?php echo site_url('booking'); ?>" class="btn btn-secondary">Batal</a>
 </form>
+<script>
+document.getElementById('device_date').value = new Date().toISOString().slice(0,10);
+</script>
 <?php $this->load->view('templates/footer'); ?>
