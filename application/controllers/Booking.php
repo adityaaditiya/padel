@@ -107,8 +107,21 @@ class Booking extends CI_Controller
         if ($role !== 'kasir') {
             redirect('dashboard');
         }
+
         $status     = $this->input->post('status');
         $keterangan = $this->input->post('keterangan');
+
+// codex/create-latest-database-for-import-56yrx7
+        $status     = $this->input->post('status');
+        $keterangan = $this->input->post('keterangan');
+
+//codex/create-latest-database-for-import-89aicw
+        $status     = $this->input->post('status');
+        $keterangan = $this->input->post('keterangan');
+
+        $status = $this->input->post('status');
+//main
+// main
         // Izinkan baik istilah bahasa Inggris maupun Indonesia
         $allowed = [
             'confirmed' => 'confirmed',
@@ -120,6 +133,8 @@ class Booking extends CI_Controller
         if (!array_key_exists($status, $allowed)) {
             show_error('Status tidak valid', 400);
         }
+
+// codex/create-latest-database-for-import-56yrx7
         $normalized = $allowed[$status];
         $data       = ['status_booking' => $normalized];
         if ($normalized === 'confirmed') {
@@ -128,6 +143,17 @@ class Booking extends CI_Controller
             $data['keterangan'] = $keterangan;
         }
         $this->Booking_model->update($id, $data);
+
+//codex/create-latest-database-for-import-89aicw
+        $data = ['status_booking' => $allowed[$status]];
+        if ($keterangan !== null) {
+            $data['keterangan'] = $keterangan;
+        }
+        $this->Booking_model->update($id, $data);
+
+        $this->Booking_model->update($id, ['status_booking' => $allowed[$status]]);
+//main
+// main
         $this->session->set_flashdata('success', 'Status booking diperbarui.');
         redirect('booking');
     }
