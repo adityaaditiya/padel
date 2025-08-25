@@ -120,7 +120,6 @@ class Booking extends CI_Controller
         if ($role !== 'kasir') {
             redirect('dashboard');
         }
-
         $status     = $this->input->post('status');
         $keterangan = $this->input->post('keterangan');
         // Izinkan baik istilah bahasa Inggris maupun Indonesia

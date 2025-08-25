@@ -35,6 +35,7 @@
                 <?php if ($role === 'owner'): ?>
                     <li class="nav-item"><a class="nav-link" href="<?php echo site_url('courts'); ?>">Lapangan</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?php echo site_url('reports'); ?>">Laporan</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo site_url('users'); ?>">Users</a></li>
                 <?php endif; ?>
                 <?php if (in_array($role, ['kasir','admin_keuangan','owner'])): ?>
                     <li class="nav-item"><a class="nav-link" href="<?php echo site_url('finance'); ?>">Keuangan</a></li>
@@ -47,6 +48,7 @@
         <ul class="navbar-nav">
             <?php if ($this->session->userdata('logged_in')): ?>
                 <li class="nav-item"><span class="navbar-text mr-3">Halo, <?php echo htmlspecialchars($this->session->userdata('nama_lengkap')); ?></span></li>
+                <li class="nav-item"><a class="nav-link" href="<?php echo site_url('users/profile'); ?>">Profil</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?php echo site_url('auth/logout'); ?>">Logout</a></li>
             <?php else: ?>
                 <li class="nav-item"><a class="nav-link" href="<?php echo site_url('auth/login'); ?>">Login</a></li>
