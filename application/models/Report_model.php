@@ -69,6 +69,7 @@ class Report_model extends CI_Model
             $this->db->where('status_booking', 'batal');
             $rows = $this->db->get()->result();
             foreach ($rows as $b) {
+
                 $details[] = [
                     'tanggal'     => $b->tanggal_booking,
                     'keterangan'  => 'Booking batal #' . $b->id,
