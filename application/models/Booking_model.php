@@ -21,9 +21,23 @@ class Booking_model extends CI_Model
     }
 
     /**
+
+     * Ambil semua booking milik pengguna tertentu.
+     */
+    public function get_by_user($id_user)
+    {
+        return $this->db->select('bookings.*, courts.nama_lapangan')
+                        ->from($this->table)
+                        ->join('courts', 'courts.id = bookings.id_court')
+                        ->where('bookings.id_user', $id_user)
+                        ->order_by('tanggal_booking', 'desc')
+                        ->get()
+                        ->result();
+    }
+
+    /**
      * Ambil daftar booking yang dibatalkan.
      */
-
     public function get_cancelled($date = null)
     {
         $this->db->where('status_booking', 'batal');
@@ -33,7 +47,6 @@ class Booking_model extends CI_Model
         return $this->db->order_by('tanggal_booking', 'desc')
                         ->get($this->table)
                         ->result();
-
     }
 
     /**

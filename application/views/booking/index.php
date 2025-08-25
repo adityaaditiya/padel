@@ -42,7 +42,6 @@
                             <form method="post" action="<?php echo site_url('booking/update_status/' . $b->id); ?>" style="display:inline-block">
                                 <input type="hidden" name="status" value="batal">
                                 <input type="text" name="keterangan" class="form-control form-control-sm mb-1" placeholder="Keterangan" value="<?php echo htmlspecialchars($b->keterangan); ?>">
-
                                 <button type="submit" class="btn btn-sm btn-danger">Batal</button>
                             </form>
                         <?php elseif ($b->status_booking === 'confirmed'): ?>
@@ -50,7 +49,6 @@
                                 <input type="text" name="keterangan" class="form-control form-control-sm mb-1" placeholder="Keterangan" value="<?php echo htmlspecialchars($b->keterangan); ?>">
                                 <button type="submit" name="status" value="selesai" class="btn btn-sm btn-success">Selesai</button>
                                 <button type="submit" name="status" value="batal" class="btn btn-sm btn-danger">Batal</button>
-
                             </form>
                         <?php endif; ?>
                     </td>

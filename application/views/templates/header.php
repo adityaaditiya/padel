@@ -20,6 +20,10 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="bookingDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Booking</a>
                     <div class="dropdown-menu" aria-labelledby="bookingDropdown">
+
+                        <?php if ($role === 'pelanggan'): ?>
+                            <a class="dropdown-item" href="<?php echo site_url('booking/my'); ?>">Booking Saya</a>
+                        <?php endif; ?>
                         <a class="dropdown-item" href="<?php echo site_url('booking'); ?>">Jadwal Booking Lapangan</a>
                         <a class="dropdown-item" href="<?php echo site_url('booking/cancelled'); ?>">Booking Batal</a>
                     </div>
