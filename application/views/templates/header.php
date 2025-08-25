@@ -27,6 +27,7 @@
                         <?php if (in_array($role, ['kasir','admin_keuangan','owner'])): ?>
                             <a class="dropdown-item" href="<?php echo site_url('booking/cancelled'); ?>">Booking Batal</a>
                         <?php endif; ?>
+
                     </div>
                 </li>
                 <?php if (in_array($role, ['kasir','admin_keuangan','owner'])): ?>
