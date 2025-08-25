@@ -40,9 +40,7 @@ $formatted_store_date = $store_date ? date('d-m-Y', strtotime($store_date)) : da
                     <li class="nav-item"><a class="nav-link" href="<?php echo site_url('store'); ?>">Tanggal Toko</a></li>
                 <?php endif; ?>
                 <?php if ($role === 'owner'): ?>
-                    <li class="nav-item"><a class="nav-link" href="<?php echo site_url('courts'); ?>">Lapangan</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?php echo site_url('reports'); ?>">Laporan</a></li>
-                    <li class="nav-item"><a class="nav-link" href="<?php echo site_url('users'); ?>">Users</a></li>
                 <?php endif; ?>
                 <?php if (in_array($role, ['kasir','admin_keuangan','owner'])): ?>
                     <li class="nav-item dropdown">
@@ -61,10 +59,16 @@ $formatted_store_date = $store_date ? date('d-m-Y', strtotime($store_date)) : da
         </ul>
         <ul class="navbar-nav">
             <?php if ($this->session->userdata('logged_in')): ?>
-                <li class="nav-item">
-                    <span class="navbar-text mr-3 px-2 py-1 border rounded d-inline-block">
-                        Tanggal Toko: <?php echo htmlspecialchars($formatted_store_date); ?>
-                    </span>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="settingsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Settings</a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="settingsDropdown">
+                        <?php if ($role === 'owner'): ?>
+                            <a class="dropdown-item" href="<?php echo site_url('users'); ?>">Users</a>
+                            <a class="dropdown-item" href="<?php echo site_url('courts'); ?>">Lapangan</a>
+                        <?php endif; ?>
+                        <div class="dropdown-divider"></div>
+                        <span class="dropdown-item-text px-2 py-1 border rounded d-block">Tanggal Toko: <?php echo htmlspecialchars($formatted_store_date); ?></span>
+                    </div>
                 </li>
                 <li class="nav-item"><span class="navbar-text mr-3">Halo, <?php echo htmlspecialchars($this->session->userdata('nama_lengkap')); ?></span></li>
                 <li class="nav-item"><a class="nav-link" href="<?php echo site_url('users/profile'); ?>">Profil</a></li>

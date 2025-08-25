@@ -1,8 +1,5 @@
-
-CREATE DATABASE IF NOT EXISTS kresnog2_padel_db;
+CREATE DATABASE IF NOT EXISTS kresnog2_padel_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE kresnog2_padel_db;
-CREATE DATABASE IF NOT EXISTS padel CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE padel;
 
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -79,8 +76,6 @@ CREATE TABLE payments (
   FOREIGN KEY (id_sale) REFERENCES sales(id),
   FOREIGN KEY (id_kasir) REFERENCES users(id)
 );
-
-
 CREATE TABLE cash_transactions (
   id INT AUTO_INCREMENT PRIMARY KEY,
   tanggal DATETIME NOT NULL,
@@ -89,7 +84,6 @@ CREATE TABLE cash_transactions (
   amount DECIMAL(10,2) NOT NULL,
   note TEXT
 );
-
 CREATE TABLE store_status (
   id INT AUTO_INCREMENT PRIMARY KEY,
   store_date DATE NOT NULL,
@@ -97,4 +91,3 @@ CREATE TABLE store_status (
   closed_at DATETIME DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
