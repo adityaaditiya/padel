@@ -39,7 +39,8 @@ class Report_model extends CI_Model
      *
      * @param string $start    Tanggal awal (YYYY-MM-DD)
      * @param string $end      Tanggal akhir (YYYY-MM-DD)
-     * @param string $category booking|batal|product
+
+     * @param string $category booking|batal|product|cash_in|cash_out|semua
      * @return array           Detail transaksi dan total uang masuk/keluar
      */
     public function get_financial_report($start, $end, $category = 'booking')
@@ -47,7 +48,7 @@ class Report_model extends CI_Model
         $details = [];
 
         if ($category === 'semua') {
-            $categories = ['booking', 'batal', 'product', 'cash_in', 'cash_out'];
+            $categories = ['booking', 'product', 'cash_in', 'cash_out'];
             foreach ($categories as $cat) {
                 $res = $this->get_financial_report($start, $end, $cat);
                 $details = array_merge($details, $res['details']);
