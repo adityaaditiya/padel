@@ -39,6 +39,7 @@ class Report_model extends CI_Model
      *
      * @param string $start    Tanggal awal (YYYY-MM-DD)
      * @param string $end      Tanggal akhir (YYYY-MM-DD)
+
      * @param string $category booking|batal|product|cash_in|cash_out|semua
      * @return array           Detail transaksi dan total uang masuk/keluar
      */
@@ -67,7 +68,6 @@ class Report_model extends CI_Model
                 'saldo'        => $total_masuk - $total_keluar,
             ];
         }
-
         if ($category === 'booking') {
             $this->db->select('id, tanggal_booking, total_harga');
             $this->db->from('bookings');
