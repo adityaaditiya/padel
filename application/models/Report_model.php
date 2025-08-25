@@ -35,32 +35,41 @@ class Report_model extends CI_Model
     }
 
     /**
-     * Mengambil detail pemasukan dan pengeluaran berdasarkan booking dan penjualan.
+     * Mengambil detail pemasukan dan pengeluaran berdasarkan kategori.
      *
-     * @param string $start Tanggal awal (YYYY-MM-DD)
-     * @param string $end   Tanggal akhir (YYYY-MM-DD)
-     * @return array        Detail transaksi dan total uang masuk/keluar
+     * @param string $start    Tanggal awal (YYYY-MM-DD)
+     * @param string $end      Tanggal akhir (YYYY-MM-DD)
+     * @param string $category booking|batal|product
+     * @return array           Detail transaksi dan total uang masuk/keluar
      */
-    public function get_financial_report($start, $end)
+    public function get_financial_report($start, $end, $category = 'booking')
     {
         $details = [];
 
-        // Booking: hanya status confirmed/selesai masuk, batal sebagai uang keluar
-        $this->db->select('id, tanggal_booking, total_harga, status_booking');
-        $this->db->from('bookings');
-        $this->db->where('tanggal_booking >=', $start);
-        $this->db->where('tanggal_booking <=', $end);
-        $bookings = $this->db->get()->result();
-
-        foreach ($bookings as $b) {
-            if (in_array($b->status_booking, ['confirmed', 'selesai'])) {
+        if ($category === 'booking') {
+            $this->db->select('id, tanggal_booking, total_harga');
+            $this->db->from('bookings');
+            $this->db->where('tanggal_booking >=', $start);
+            $this->db->where('tanggal_booking <=', $end);
+            $this->db->where_in('status_booking', ['confirmed', 'selesai']);
+            $rows = $this->db->get()->result();
+            foreach ($rows as $b) {
                 $details[] = [
                     'tanggal'     => $b->tanggal_booking,
                     'keterangan'  => 'Booking #' . $b->id,
                     'uang_masuk'  => (float) $b->total_harga,
                     'uang_keluar' => 0,
                 ];
-            } elseif ($b->status_booking === 'batal') {
+            }
+        } elseif ($category === 'batal') {
+            $this->db->select('id, tanggal_booking, total_harga');
+            $this->db->from('bookings');
+            $this->db->where('tanggal_booking >=', $start);
+            $this->db->where('tanggal_booking <=', $end);
+            $this->db->where('status_booking', 'batal');
+            $rows = $this->db->get()->result();
+            foreach ($rows as $b) {
+
                 $details[] = [
                     'tanggal'     => $b->tanggal_booking,
                     'keterangan'  => 'Booking batal #' . $b->id,
@@ -68,22 +77,20 @@ class Report_model extends CI_Model
                     'uang_keluar' => (float) $b->total_harga,
                 ];
             }
-        }
-
-        // Penjualan produk masuk sebagai uang masuk
-        $this->db->select('id, total_belanja, tanggal_transaksi');
-        $this->db->from('sales');
-        $this->db->where('tanggal_transaksi >=', $start);
-        $this->db->where('tanggal_transaksi <=', $end . ' 23:59:59');
-        $sales = $this->db->get()->result();
-
-        foreach ($sales as $s) {
-            $details[] = [
-                'tanggal'     => date('Y-m-d', strtotime($s->tanggal_transaksi)),
-                'keterangan'  => 'Penjualan #' . $s->id,
-                'uang_masuk'  => (float) $s->total_belanja,
-                'uang_keluar' => 0,
-            ];
+        } elseif ($category === 'product') {
+            $this->db->select('id, total_belanja, tanggal_transaksi');
+            $this->db->from('sales');
+            $this->db->where('tanggal_transaksi >=', $start);
+            $this->db->where('tanggal_transaksi <=', $end . ' 23:59:59');
+            $rows = $this->db->get()->result();
+            foreach ($rows as $s) {
+                $details[] = [
+                    'tanggal'     => date('Y-m-d', strtotime($s->tanggal_transaksi)),
+                    'keterangan'  => 'Penjualan #' . $s->id,
+                    'uang_masuk'  => (float) $s->total_belanja,
+                    'uang_keluar' => 0,
+                ];
+            }
         }
 
         // Urutkan berdasarkan tanggal

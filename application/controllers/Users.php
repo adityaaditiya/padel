@@ -107,7 +107,6 @@ class Users extends CI_Controller
 
         $data['user'] = $user;
         $data['editing_self'] = ((int)$id === (int)$current_id);
-
         $this->load->view('users/profile', $data);
     }
 }

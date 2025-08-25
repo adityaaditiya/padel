@@ -31,8 +31,12 @@ class Finance extends CI_Controller
     public function index()
     {
         $this->authorize();
-        $start = $this->input->get('start_date');
-        $end   = $this->input->get('end_date');
+        $start    = $this->input->get('start_date');
+        $end      = $this->input->get('end_date');
+        $category = $this->input->get('category');
+        if (!$category) {
+            $category = 'booking';
+        }
         if (!$start) {
             $start = date('Y-m-01');
         }
@@ -40,8 +44,9 @@ class Finance extends CI_Controller
             $end = date('Y-m-t');
         }
         $data['start_date'] = $start;
-        $data['end_date'] = $end;
-        $data['report'] = $this->Report_model->get_financial_report($start, $end);
+        $data['end_date']   = $end;
+        $data['category']   = $category;
+        $data['report']     = $this->Report_model->get_financial_report($start, $end, $category);
         $this->load->view('finance/index', $data);
     }
 }
