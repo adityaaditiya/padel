@@ -87,11 +87,11 @@ class Booking extends CI_Controller
                 'status_booking'   => 'pending',
                 'status_pembayaran'=> 'belum_bayar'
             ];
-            $this->Booking_model->insert($data);
-            $this->session->set_flashdata('success', 'Booking berhasil disimpan, silakan lakukan pembayaran.');
-            redirect('booking');
-            return;
-        }
+        $this->Booking_model->insert($data);
+        $this->session->set_flashdata('success', 'Booking berhasil disimpan, silakan lakukan pembayaran.');
+        redirect('booking');
+        return;
+    }
         $this->create();
     }
 
@@ -107,6 +107,10 @@ class Booking extends CI_Controller
         if ($role !== 'kasir') {
             redirect('dashboard');
         }
+
+        $status     = $this->input->post('status');
+        $keterangan = $this->input->post('keterangan');
+
 // codex/create-latest-database-for-import-56yrx7
         $status     = $this->input->post('status');
         $keterangan = $this->input->post('keterangan');
@@ -129,6 +133,7 @@ class Booking extends CI_Controller
         if (!array_key_exists($status, $allowed)) {
             show_error('Status tidak valid', 400);
         }
+
 // codex/create-latest-database-for-import-56yrx7
         $normalized = $allowed[$status];
         $data       = ['status_booking' => $normalized];
@@ -151,5 +156,17 @@ class Booking extends CI_Controller
 // main
         $this->session->set_flashdata('success', 'Status booking diperbarui.');
         redirect('booking');
+    }
+
+    /**
+     * Tampilkan daftar booking yang dibatalkan.
+     */
+    public function cancelled()
+    {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('auth/login');
+        }
+        $data['bookings'] = $this->Booking_model->get_cancelled();
+        $this->load->view('booking/cancelled', $data);
     }
 }

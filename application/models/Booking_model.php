@@ -21,6 +21,15 @@ class Booking_model extends CI_Model
     }
 
     /**
+     * Ambil daftar booking yang dibatalkan.
+     */
+    public function get_cancelled()
+    {
+        $this->db->where('status_booking', 'batal');
+        return $this->db->order_by('tanggal_booking', 'desc')->get($this->table)->result();
+    }
+
+    /**
      * Periksa apakah lapangan tersedia pada tanggal dan jam tertentu.
      * Mengembalikan TRUE jika tersedia, FALSE jika ada bentrok.
      */
