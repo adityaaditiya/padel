@@ -3,7 +3,11 @@
 <?php if ($this->session->flashdata('success')): ?>
     <div class="alert alert-success"><?php echo $this->session->flashdata('success'); ?></div>
 <?php endif; ?>
+<?php if ($this->session->flashdata('error')): ?>
+    <div class="alert alert-danger"><?php echo $this->session->flashdata('error'); ?></div>
+<?php endif; ?>
 <form method="post">
+    <input type="hidden" name="device_date" id="device_date">
     <div class="form-group">
         <label for="category">Kategori</label>
         <select name="category" id="category" class="form-control">
@@ -23,4 +27,7 @@
     </div>
     <button type="submit" class="btn btn-primary">Simpan</button>
 </form>
+<script>
+document.getElementById('device_date').value = new Date().toISOString().slice(0,10);
+</script>
 <?php $this->load->view('templates/footer'); ?>

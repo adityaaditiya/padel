@@ -37,6 +37,7 @@ $formatted_store_date = $store_date ? date('d-m-Y', strtotime($store_date)) : da
                 </li>
                 <?php if (in_array($role, ['kasir','admin_keuangan','owner'])): ?>
                     <li class="nav-item"><a class="nav-link" href="<?php echo site_url('pos'); ?>">POS</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo site_url('store'); ?>">Tanggal Toko</a></li>
                 <?php endif; ?>
                 <?php if ($role === 'owner'): ?>
                     <li class="nav-item"><a class="nav-link" href="<?php echo site_url('reports'); ?>">Laporan</a></li>

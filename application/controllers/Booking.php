@@ -11,7 +11,7 @@ class Booking extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(['Court_model','Booking_model']);
+        $this->load->model(['Court_model','Booking_model','Store_model']);
         $this->load->library(['session','form_validation']);
         $this->load->helper(['url','form']);
     }
@@ -53,6 +53,12 @@ class Booking extends CI_Controller
     {
         if (!$this->session->userdata('logged_in')) {
             redirect('auth/login');
+        }
+        $error = $this->Store_model->validate_device_date($this->input->post('device_date'));
+        if ($error) {
+            $this->session->set_flashdata('error', $error);
+            redirect('booking/create');
+            return;
         }
         $this->form_validation->set_rules('id_court', 'Lapangan', 'required');
         $this->form_validation->set_rules('tanggal_booking', 'Tanggal', 'required');

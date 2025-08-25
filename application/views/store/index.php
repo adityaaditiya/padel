@@ -1,0 +1,23 @@
+<?php $this->load->view('templates/header'); ?>
+<h2>Tanggal Toko</h2>
+<?php if ($this->session->flashdata('success')): ?>
+    <div class="alert alert-success"><?php echo $this->session->flashdata('success'); ?></div>
+<?php endif; ?>
+<?php if ($this->session->flashdata('error')): ?>
+    <div class="alert alert-danger"><?php echo $this->session->flashdata('error'); ?></div>
+<?php endif; ?>
+<?php if ($store && $store->is_open): ?>
+    <p>Toko dibuka pada tanggal: <strong><?php echo $store->store_date; ?></strong></p>
+    <form method="post" action="<?php echo site_url('store/close'); ?>">
+        <button type="submit" class="btn btn-danger">Tutup Toko</button>
+    </form>
+<?php else: ?>
+    <form method="post" action="<?php echo site_url('store/open'); ?>">
+        <div class="form-group">
+            <label for="store_date">Tanggal Toko</label>
+            <input type="date" name="store_date" id="store_date" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Buka Toko</button>
+    </form>
+<?php endif; ?>
+<?php $this->load->view('templates/footer'); ?>
