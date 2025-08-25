@@ -55,19 +55,27 @@ $formatted_store_date = $store_date ? date('d-m-Y', strtotime($store_date)) : da
                     <li class="nav-item"><a class="nav-link" href="<?php echo site_url('products'); ?>">Produk</a></li>
                 <?php endif; ?>
             <?php endif; ?>
+
             <?php if ($this->session->userdata('logged_in')): ?>
     <?php $role = $this->session->userdata('role'); ?>
-    <?php if (in_array($role, ['kasir','owner'])): ?> 
+    <?php if (in_array($role, ['owner','kasir','pelanggan','admin_keuangan'])): ?> 
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="settingsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Settings</a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="settingsDropdown">
-            <a class="dropdown-item" href="<?php echo site_url('store'); ?>">Tanggal Toko</a>
+
+                <?php if (in_array($role, ['owner','kasir'])): ?>
+                    <a class="dropdown-item" href="<?php echo site_url('store'); ?>">Tanggal Toko</a>
+                <?php endif; ?>
+
+                <?php if (in_array($role, ['owner','kasir','pelanggan','admin_keuangan'])): ?>
+                    <a class="dropdown-item" href="<?php echo site_url('users/profile'); ?>">Ubah Profile</a>
+                <?php endif; ?>
+
                 <?php if ($role === 'owner'): ?>
                     <a class="dropdown-item" href="<?php echo site_url('users'); ?>">Users</a>
                     <a class="dropdown-item" href="<?php echo site_url('courts'); ?>">Lapangan</a>
                 <?php endif; ?>
 
-                
             </div>
         </li>
     <?php endif; ?>
@@ -81,8 +89,8 @@ $formatted_store_date = $store_date ? date('d-m-Y', strtotime($store_date)) : da
                     </span>
                 </li>
                 <?php if ($this->session->userdata('logged_in')): ?> 
-                <!-- <li class="nav-item"><span class="navbar-text mr-3">Halo, <?php echo htmlspecialchars($this->session->userdata('nama_lengkap')); ?></span></li> -->
-                <li class="nav-item"><a class="nav-link" href="<?php echo site_url('users/profile'); ?>">Profil</a></li>
+                <li class="nav-item"><span class="navbar-text mr-3">Halo, <?php echo htmlspecialchars($this->session->userdata('nama_lengkap')); ?></span></li>
+                <!-- <li class="nav-item"><a class="nav-link" href="<?php echo site_url('users/profile'); ?>">Profil</a></li> -->
                 <li class="nav-item"><a class="nav-link" href="<?php echo site_url('auth/logout'); ?>">Logout</a></li>
             <?php else: ?>
                 <li class="nav-item"><a class="nav-link" href="<?php echo site_url('auth/login'); ?>">Login</a></li>
