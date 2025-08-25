@@ -7,6 +7,7 @@
     <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?php echo htmlspecialchars($end_date); ?>">
     <label for="category" class="mr-2">Kategori:</label>
     <select name="category" id="category" class="form-control mr-2">
+        <option value="semua" <?php echo $category === 'semua' ? 'selected' : ''; ?>>Semua</option>
         <option value="booking" <?php echo $category === 'booking' ? 'selected' : ''; ?>>Booking</option>
         <option value="batal" <?php echo $category === 'batal' ? 'selected' : ''; ?>>Batal Booking</option>
         <option value="product" <?php echo $category === 'product' ? 'selected' : ''; ?>>Penjualan Produk</option>

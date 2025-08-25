@@ -16,7 +16,6 @@ class Store_status_model extends CI_Model
                         ->row();
         return $row ? $row->store_date : NULL;
     }
-
     /**
      * Advance the store date by one day and persist it.
      */

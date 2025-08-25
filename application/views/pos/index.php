@@ -51,11 +51,17 @@
                     </tr>
                 </tfoot>
             </table>
-            <a href="<?php echo site_url('pos/checkout'); ?>" class="btn btn-primary">Checkout</a>
+            <form method="post" action="<?php echo site_url('pos/checkout'); ?>">
+                <input type="hidden" name="device_date" id="device_date">
+                <button type="submit" class="btn btn-primary">Checkout</button>
+            </form>
         <?php else: ?>
             <p>Keranjang kosong.</p>
         <?php endif; ?>
     </div>
 </div>
 
+<script>
+document.getElementById('device_date') && (document.getElementById('device_date').value = new Date().toISOString().slice(0,10));
+</script>
 <?php $this->load->view('templates/footer'); ?>
