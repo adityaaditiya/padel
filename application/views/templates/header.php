@@ -27,7 +27,6 @@
                         <?php if (in_array($role, ['kasir','admin_keuangan','owner'])): ?>
                             <a class="dropdown-item" href="<?php echo site_url('booking/cancelled'); ?>">Booking Batal</a>
                         <?php endif; ?>
-
                     </div>
                 </li>
                 <?php if (in_array($role, ['kasir','admin_keuangan','owner'])): ?>
@@ -37,7 +36,7 @@
                     <li class="nav-item"><a class="nav-link" href="<?php echo site_url('courts'); ?>">Lapangan</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?php echo site_url('reports'); ?>">Laporan</a></li>
                 <?php endif; ?>
-                <?php if (in_array($role, ['admin_keuangan','owner'])): ?>
+                <?php if (in_array($role, ['kasir','admin_keuangan','owner'])): ?>
                     <li class="nav-item"><a class="nav-link" href="<?php echo site_url('finance'); ?>">Keuangan</a></li>
                 <?php endif; ?>
                 <?php if (in_array($role, ['kasir','admin_keuangan','owner'])): ?>
