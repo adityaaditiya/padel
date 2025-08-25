@@ -10,6 +10,8 @@
         <option value="booking" <?php echo $category === 'booking' ? 'selected' : ''; ?>>Booking</option>
         <option value="batal" <?php echo $category === 'batal' ? 'selected' : ''; ?>>Batal Booking</option>
         <option value="product" <?php echo $category === 'product' ? 'selected' : ''; ?>>Penjualan Produk</option>
+        <option value="cash_in" <?php echo $category === 'cash_in' ? 'selected' : ''; ?>>Tambah Uang Kas</option>
+        <option value="cash_out" <?php echo $category === 'cash_out' ? 'selected' : ''; ?>>Ambil Uang Kas</option>
     </select>
     <button type="submit" class="btn btn-primary">Tampilkan</button>
 </form>

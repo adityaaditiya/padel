@@ -38,6 +38,13 @@
                     <li class="nav-item"><a class="nav-link" href="<?php echo site_url('users'); ?>">Users</a></li>
                 <?php endif; ?>
                 <?php if (in_array($role, ['kasir','admin_keuangan','owner'])): ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="cashDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Uang Kas</a>
+                        <div class="dropdown-menu" aria-labelledby="cashDropdown">
+                            <a class="dropdown-item" href="<?php echo site_url('cash/add'); ?>">Tambah Uang Kas</a>
+                            <a class="dropdown-item" href="<?php echo site_url('cash/withdraw'); ?>">Ambil Uang Kas</a>
+                        </div>
+                    </li>
                     <li class="nav-item"><a class="nav-link" href="<?php echo site_url('finance'); ?>">Keuangan</a></li>
                 <?php endif; ?>
                 <?php if (in_array($role, ['kasir','admin_keuangan','owner'])): ?>

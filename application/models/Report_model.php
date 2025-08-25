@@ -69,7 +69,6 @@ class Report_model extends CI_Model
             $this->db->where('status_booking', 'batal');
             $rows = $this->db->get()->result();
             foreach ($rows as $b) {
-
                 $details[] = [
                     'tanggal'     => $b->tanggal_booking,
                     'keterangan'  => 'Booking batal #' . $b->id,
@@ -89,6 +88,36 @@ class Report_model extends CI_Model
                     'keterangan'  => 'Penjualan #' . $s->id,
                     'uang_masuk'  => (float) $s->total_belanja,
                     'uang_keluar' => 0,
+                ];
+            }
+        } elseif ($category === 'cash_in') {
+            $this->db->select('tanggal, amount, note, category');
+            $this->db->from('cash_transactions');
+            $this->db->where('tanggal >=', $start . ' 00:00:00');
+            $this->db->where('tanggal <=', $end . ' 23:59:59');
+            $this->db->where('type', 'in');
+            $rows = $this->db->get()->result();
+            foreach ($rows as $c) {
+                $details[] = [
+                    'tanggal'     => date('Y-m-d', strtotime($c->tanggal)),
+                    'keterangan'  => $c->note ?: $c->category,
+                    'uang_masuk'  => (float) $c->amount,
+                    'uang_keluar' => 0,
+                ];
+            }
+        } elseif ($category === 'cash_out') {
+            $this->db->select('tanggal, amount, note, category');
+            $this->db->from('cash_transactions');
+            $this->db->where('tanggal >=', $start . ' 00:00:00');
+            $this->db->where('tanggal <=', $end . ' 23:59:59');
+            $this->db->where('type', 'out');
+            $rows = $this->db->get()->result();
+            foreach ($rows as $c) {
+                $details[] = [
+                    'tanggal'     => date('Y-m-d', strtotime($c->tanggal)),
+                    'keterangan'  => $c->note ?: $c->category,
+                    'uang_masuk'  => 0,
+                    'uang_keluar' => (float) $c->amount,
                 ];
             }
         }
