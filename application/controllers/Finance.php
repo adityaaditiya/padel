@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * Controller laporan keuangan untuk admin_keuangan dan owner.
+ * Controller laporan keuangan untuk kasir, admin_keuangan dan owner.
  */
 class Finance extends CI_Controller
 {
@@ -20,7 +20,7 @@ class Finance extends CI_Controller
             redirect('auth/login');
         }
         $role = $this->session->userdata('role');
-        if (!in_array($role, ['admin_keuangan','owner'])) {
+        if (!in_array($role, ['kasir','admin_keuangan','owner'])) {
             redirect('dashboard');
         }
     }
