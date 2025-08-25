@@ -9,7 +9,7 @@ class Pos extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(['Product_model','Sale_model','Sale_detail_model','Payment_model']);
+        $this->load->model(['Product_model','Sale_model','Sale_detail_model','Payment_model','Store_model']);
         $this->load->library('session');
         $this->load->helper(['url']);
     }
@@ -85,6 +85,15 @@ class Pos extends CI_Controller
     public function checkout()
     {
         $this->authorize();
+        if ($this->input->method() !== 'post') {
+            redirect('pos');
+        }
+        $error = $this->Store_model->validate_device_date($this->input->post('device_date'));
+        if ($error) {
+            $this->session->set_flashdata('error', $error);
+            redirect('pos');
+            return;
+        }
         $cart = $this->session->userdata('cart') ?: [];
         if (empty($cart)) {
             $this->session->set_flashdata('error', 'Keranjang kosong.');
