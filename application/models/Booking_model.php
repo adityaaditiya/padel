@@ -23,6 +23,7 @@ class Booking_model extends CI_Model
     /**
      * Ambil daftar booking yang dibatalkan.
      */
+
     public function get_cancelled($date = null)
     {
         $this->db->where('status_booking', 'batal');
@@ -32,6 +33,7 @@ class Booking_model extends CI_Model
         return $this->db->order_by('tanggal_booking', 'desc')
                         ->get($this->table)
                         ->result();
+
     }
 
     /**
