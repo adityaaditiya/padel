@@ -35,7 +35,7 @@ class Finance extends CI_Controller
         $end      = $this->input->get('end_date');
         $category = $this->input->get('category');
         if (!$category) {
-            $category = 'booking';
+            $category = 'semua';
         }
         if (!$start) {
             $start = date('Y-m-01');
