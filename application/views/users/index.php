@@ -15,11 +15,7 @@
             <td><?php echo htmlspecialchars($u->nama_lengkap); ?></td>
             <td><?php echo htmlspecialchars($u->email); ?></td>
             <td><?php echo htmlspecialchars($u->role); ?></td>
-
             <td><a href="<?php echo site_url('users/edit/'.$u->id); ?>" class="btn btn-sm btn-primary">Edit</a></td>
-
-            
-
         </tr>
         <?php endforeach; ?>
     </tbody>

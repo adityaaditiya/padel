@@ -28,9 +28,7 @@ class Users extends CI_Controller
         $data['users'] = $this->User_model->get_all();
         $this->load->view('users/index', $data);
     }
-
     /**
-
      * Owner only: edit data user lain, termasuk mengganti password dan role.
      */
     public function edit($id)
@@ -42,7 +40,7 @@ class Users extends CI_Controller
         // Gunakan logika yang sama dengan profile() tetapi memaksa ID yang dipilih
         return $this->profile($id);
     }
-/**
+    /**
      * Edit profil pengguna. Jika $id null, edit profil sendiri.
      * Owner dapat mengedit semua user termasuk role.
      */
@@ -108,7 +106,6 @@ class Users extends CI_Controller
         }
 
         $data['user'] = $user;
-
         $data['editing_self'] = ((int)$id === (int)$current_id);
 
         $this->load->view('users/profile', $data);

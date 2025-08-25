@@ -9,18 +9,42 @@
 </form>
 
 <table class="table table-bordered">
-    <tr>
-        <th>Total Pendapatan Booking</th>
-        <td>Rp <?php echo number_format($report['total_booking'], 0, ',', '.'); ?></td>
-    </tr>
-    <tr>
-        <th>Total Penjualan F&B</th>
-        <td>Rp <?php echo number_format($report['total_sales'], 0, ',', '.'); ?></td>
-    </tr>
-    <tr>
-        <th>Grand Total</th>
-        <td><strong>Rp <?php echo number_format($report['grand_total'], 0, ',', '.'); ?></strong></td>
-    </tr>
+    <thead>
+        <tr>
+            <th>Tanggal</th>
+            <th>Keterangan</th>
+            <th>Uang Masuk</th>
+            <th>Uang Keluar</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php if (!empty($report['details'])): ?>
+        <?php foreach ($report['details'] as $row): ?>
+        <tr>
+            <td><?php echo htmlspecialchars($row['tanggal']); ?></td>
+            <td><?php echo htmlspecialchars($row['keterangan']); ?></td>
+            <td>Rp <?php echo number_format($row['uang_masuk'], 0, ',', '.'); ?></td>
+            <td>Rp <?php echo number_format($row['uang_keluar'], 0, ',', '.'); ?></td>
+        </tr>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="4" class="text-center">Tidak ada data</td>
+        </tr>
+    <?php endif; ?>
+    </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="2">Total</th>
+            <th>Rp <?php echo number_format($report['total_masuk'], 0, ',', '.'); ?></th>
+            <th>Rp <?php echo number_format($report['total_keluar'], 0, ',', '.'); ?></th>
+        </tr>
+        <tr>
+            <th colspan="2">Saldo</th>
+            <th colspan="2">Rp <?php echo number_format($report['saldo'], 0, ',', '.'); ?></th>
+        </tr>
+    </tfoot>
 </table>
 
 <?php $this->load->view('templates/footer'); ?>
+

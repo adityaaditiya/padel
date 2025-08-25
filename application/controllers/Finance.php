@@ -26,7 +26,7 @@ class Finance extends CI_Controller
     }
 
     /**
-     * Menampilkan laporan ringkas berdasarkan rentang tanggal.
+     * Menampilkan laporan keuangan detail berdasarkan rentang tanggal.
      */
     public function index()
     {
@@ -41,7 +41,7 @@ class Finance extends CI_Controller
         }
         $data['start_date'] = $start;
         $data['end_date'] = $end;
-        $data['report'] = $this->Report_model->get_financial_summary($start, $end);
+        $data['report'] = $this->Report_model->get_financial_report($start, $end);
         $this->load->view('finance/index', $data);
     }
 }
