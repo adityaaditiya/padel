@@ -1,7 +1,5 @@
 <?php $this->load->view('templates/header'); ?>
 <h2>Booking Batal</h2>
-
-
 <form method="get" action="<?php echo site_url('booking/cancelled'); ?>" class="form-inline mb-3">
     <label for="date" class="mr-2">Tanggal:</label>
     <input type="date" id="date" name="date" class="form-control mr-2" value="<?php echo htmlspecialchars($date); ?>">
@@ -35,6 +33,5 @@
     <p>Tidak ada booking batal pada tanggal ini.</p>
 <?php else: ?>
     <p>Silakan pilih tanggal.</p>
-
 <?php endif; ?>
 <?php $this->load->view('templates/footer'); ?>

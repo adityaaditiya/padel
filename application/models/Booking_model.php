@@ -21,7 +21,6 @@ class Booking_model extends CI_Model
     }
 
     /**
-
      * Ambil semua booking milik pengguna tertentu.
      */
     public function get_by_user($id_user)
