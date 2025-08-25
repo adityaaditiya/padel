@@ -87,12 +87,25 @@ class Booking extends CI_Controller
                 'status_booking'   => 'pending',
                 'status_pembayaran'=> 'belum_bayar'
             ];
-            $this->Booking_model->insert($data);
-            $this->session->set_flashdata('success', 'Booking berhasil disimpan, silakan lakukan pembayaran.');
-            redirect('booking');
-            return;
-        }
+        $this->Booking_model->insert($data);
+        $this->session->set_flashdata('success', 'Booking berhasil disimpan, silakan lakukan pembayaran.');
+        redirect('booking');
+        return;
+    }
         $this->create();
+    }
+
+    /**
+     * Tampilkan daftar booking milik user yang sedang login.
+     */
+    public function my()
+    {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('auth/login');
+        }
+        $user_id = $this->session->userdata('id');
+        $data['bookings'] = $this->Booking_model->get_by_user($user_id);
+        $this->load->view('booking/my', $data);
     }
 
     /**
@@ -107,13 +120,48 @@ class Booking extends CI_Controller
         if ($role !== 'kasir') {
             redirect('dashboard');
         }
-        $status = $this->input->post('status');
-        $allowed = ['confirmed','cancelled','completed'];
-        if (!in_array($status, $allowed)) {
+        $status     = $this->input->post('status');
+        $keterangan = $this->input->post('keterangan');
+        // Izinkan baik istilah bahasa Inggris maupun Indonesia
+        $allowed = [
+            'confirmed' => 'confirmed',
+            'cancelled' => 'batal',
+            'completed' => 'selesai',
+            'batal'     => 'batal',
+            'selesai'   => 'selesai'
+        ];
+        if (!array_key_exists($status, $allowed)) {
             show_error('Status tidak valid', 400);
         }
-        $this->Booking_model->update($id, ['status_booking' => $status]);
+        $normalized = $allowed[$status];
+        $data       = ['status_booking' => $normalized];
+        if ($normalized === 'confirmed') {
+            $data['keterangan'] = 'pembayaran sudah di konfirmasi';
+        } elseif ($keterangan !== null) {
+            $data['keterangan'] = $keterangan;
+        }
+        $this->Booking_model->update($id, $data);
         $this->session->set_flashdata('success', 'Status booking diperbarui.');
         redirect('booking');
+    }
+
+    /**
+     * Tampilkan daftar booking yang dibatalkan.
+     */
+    public function cancelled()
+    {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('auth/login');
+        }
+
+        $date = $this->input->get('date');
+        if (!$date) {
+            $date = $this->input->get('tanggal');
+        }
+
+        $data['date'] = $date;
+        $data['bookings'] = !empty($date) ? $this->Booking_model->get_cancelled($date) : [];
+
+        $this->load->view('booking/cancelled', $data);
     }
 }
