@@ -120,6 +120,7 @@ class Booking extends CI_Controller
         if ($role !== 'kasir') {
             redirect('dashboard');
         }
+
         $status     = $this->input->post('status');
         $keterangan = $this->input->post('keterangan');
         // Izinkan baik istilah bahasa Inggris maupun Indonesia
@@ -153,12 +154,10 @@ class Booking extends CI_Controller
         if (!$this->session->userdata('logged_in')) {
             redirect('auth/login');
         }
-
         $role = $this->session->userdata('role');
         if (!in_array($role, ['kasir', 'admin_keuangan', 'owner'])) {
             show_error('Forbidden', 403);
         }
-
         $date = $this->input->get('date');
         if (!$date) {
             $date = $this->input->get('tanggal');
