@@ -76,6 +76,10 @@ $formatted_store_date = $store_date ? date('d-m-Y', strtotime($store_date)) : da
 
                 <?php if (in_array($role, ['owner','kasir','pelanggan','admin_keuangan'])): ?>
                     <a class="dropdown-item" href="<?php echo site_url('users/profile'); ?>">Edit Profile</a>
+                    <?php if ($role === 'pelanggan'): ?>
+                        <a class="dropdown-item" href="<?php echo site_url('members/profile'); ?>">Data Member</a>
+                    <?php endif; ?>
+
                 <?php endif; ?>
 
                 <?php if ($role === 'owner'): ?>
