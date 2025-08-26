@@ -80,7 +80,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="4"><button type="submit" class="btn btn-secondary btn-sm">Update Qty</button></td>
+                          <th></th>
                             <th>Total</th>
                             <th id="cart-total">Rp <?php echo number_format($total, 0, ',', '.'); ?></th>
                         </tr>
@@ -137,6 +137,7 @@
     </div>
   </div>
 </div>
+
 
 <script>
 var deviceInput = document.getElementById('device_date');
@@ -204,7 +205,6 @@ qtyInputs.forEach(function(input) {
         recalcTotal();
     });
 });
-
 var memberSearchInput = document.getElementById('member-search');
 var memberSearchBtn = document.getElementById('member-search-btn');
 var memberTableBody = document.querySelector('#member-table tbody');
