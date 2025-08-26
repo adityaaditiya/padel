@@ -1,9 +1,15 @@
 <?php $this->load->view('templates/header'); ?>
 <h2>Daftar Transaksi POS</h2>
-<form method="get" class="mb-3">
-    <input type="date" name="start" value="<?php echo htmlspecialchars($filter_start); ?>">
-    <input type="date" name="end" value="<?php echo htmlspecialchars($filter_end); ?>">
-    <button type="submit" class="btn btn-primary btn-sm px-2">Cari</button>
+<form method="get" class="form-inline mb-3">
+    <div class="form-group mr-2">
+        <label for="from" class="mr-2">Tanggal dari</label>
+        <input type="date" class="form-control" id="from" name="from" placeholder="<?php echo date('Y-m-d'); ?>" value="<?php echo htmlspecialchars($from ?? ''); ?>">
+    </div>
+    <div class="form-group mr-2">
+        <label for="to" class="mr-2">Tanggal sampai</label>
+        <input type="date" class="form-control" id="to" name="to" placeholder="<?php echo date('Y-m-d'); ?>" value="<?php echo htmlspecialchars($to ?? ''); ?>">
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
 </form>
 
 <?php if ($filter_start && $filter_end): ?>
@@ -61,4 +67,5 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 });
 </script>
+
 
