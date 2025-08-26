@@ -40,6 +40,8 @@ class Member_model extends CI_Model
         $this->db->trans_start();
         $this->db->insert('users', $user_data);
         $member_data['user_id'] = $this->db->insert_id();
+        unset($member_data['kode_member']);
+        $member_data['kode_member'] = str_pad($member_data['user_id'], 10, '0', STR_PAD_LEFT);
         $this->db->insert($this->table, $member_data);
         $this->db->trans_complete();
         return $this->db->trans_status();
@@ -52,11 +54,13 @@ class Member_model extends CI_Model
     {
         $this->db->trans_start();
         $this->db->where('id', $id)->update('users', $user_data);
+        unset($member_data['kode_member']);
         $exists = $this->db->get_where($this->table, ['user_id' => $id])->row();
         if ($exists) {
             $this->db->where('user_id', $id)->update($this->table, $member_data);
         } else {
             $member_data['user_id'] = $id;
+            $member_data['kode_member'] = str_pad($id, 10, '0', STR_PAD_LEFT);
             $this->db->insert($this->table, $member_data);
         }
         $this->db->trans_complete();

@@ -99,7 +99,7 @@ CREATE TABLE store_status (
 CREATE TABLE member_data (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
-  kode_member VARCHAR(100) NOT NULL,
+  kode_member CHAR(10) NOT NULL,
   alamat VARCHAR(255) DEFAULT NULL,
   kecamatan VARCHAR(100) DEFAULT NULL,
   kota VARCHAR(100) DEFAULT NULL,

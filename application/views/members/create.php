@@ -19,10 +19,6 @@
         <input type="password" name="password" id="password" class="form-control" required>
     </div>
     <div class="form-group">
-        <label for="kode_member">Kode Member</label>
-        <input type="text" name="kode_member" id="kode_member" class="form-control" value="<?php echo set_value('kode_member'); ?>" required>
-    </div>
-    <div class="form-group">
         <label for="alamat">Alamat / Jalan</label>
         <input type="text" name="alamat" id="alamat" class="form-control" value="<?php echo set_value('alamat'); ?>">
     </div>

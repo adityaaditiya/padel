@@ -20,7 +20,7 @@
     </div>
     <div class="form-group">
         <label for="kode_member">Kode Member</label>
-        <input type="text" name="kode_member" id="kode_member" class="form-control" value="<?php echo set_value('kode_member', $member->kode_member); ?>" required>
+        <input type="text" id="kode_member" class="form-control" value="<?php echo $member->kode_member; ?>" readonly>
     </div>
     <div class="form-group">
         <label for="alamat">Alamat / Jalan</label>

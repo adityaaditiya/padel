@@ -44,7 +44,6 @@ class Members extends CI_Controller
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
         $this->form_validation->set_rules('no_telepon', 'No Telepon', 'required');
         $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
-        $this->form_validation->set_rules('kode_member', 'Kode Member', 'required');
         if ($this->form_validation->run() === TRUE) {
             $user_data = [
                 'nama_lengkap' => $this->input->post('nama_lengkap', TRUE),
@@ -54,11 +53,10 @@ class Members extends CI_Controller
                 'role'         => 'pelanggan'
             ];
             $member_data = [
-                'kode_member' => $this->input->post('kode_member', TRUE),
-                'alamat'      => $this->input->post('alamat', TRUE),
-                'kecamatan'   => $this->input->post('kecamatan', TRUE),
-                'kota'        => $this->input->post('kota', TRUE),
-                'provinsi'    => $this->input->post('provinsi', TRUE)
+                'alamat'    => $this->input->post('alamat', TRUE),
+                'kecamatan' => $this->input->post('kecamatan', TRUE),
+                'kota'      => $this->input->post('kota', TRUE),
+                'provinsi'  => $this->input->post('provinsi', TRUE)
             ];
             $this->Member_model->insert($user_data, $member_data);
             $this->session->set_flashdata('success', 'Member berhasil ditambahkan.');
@@ -84,7 +82,6 @@ class Members extends CI_Controller
         $this->form_validation->set_rules('nama_lengkap', 'Nama Lengkap', 'required');
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
         $this->form_validation->set_rules('no_telepon', 'No Telepon', 'required');
-        $this->form_validation->set_rules('kode_member', 'Kode Member', 'required');
         if ($this->form_validation->run() === TRUE) {
             $user_data = [
                 'nama_lengkap' => $this->input->post('nama_lengkap', TRUE),
@@ -96,11 +93,10 @@ class Members extends CI_Controller
                 $user_data['password'] = password_hash($this->input->post('password'), PASSWORD_DEFAULT);
             }
             $member_data = [
-                'kode_member' => $this->input->post('kode_member', TRUE),
-                'alamat'      => $this->input->post('alamat', TRUE),
-                'kecamatan'   => $this->input->post('kecamatan', TRUE),
-                'kota'        => $this->input->post('kota', TRUE),
-                'provinsi'    => $this->input->post('provinsi', TRUE)
+                'alamat'    => $this->input->post('alamat', TRUE),
+                'kecamatan' => $this->input->post('kecamatan', TRUE),
+                'kota'      => $this->input->post('kota', TRUE),
+                'provinsi'  => $this->input->post('provinsi', TRUE)
             ];
             $this->Member_model->update($id, $user_data, $member_data);
             $this->session->set_flashdata('success', 'Member berhasil diperbarui.');
