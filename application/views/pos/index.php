@@ -58,8 +58,8 @@
                     <?php foreach ($cart as $item): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($item['nama_produk']); ?></td>
-                            <td><input type="number" name="qty[<?php echo $item['id']; ?>]" value="<?php echo $item['qty']; ?>" min="1" class="form-control form-control-sm"></td>
-                            <td>Rp <?php echo number_format($item['harga_jual'] * $item['qty'], 0, ',', '.'); ?></td>
+                            <td><input type="number" name="qty[<?php echo $item['id']; ?>]" value="<?php echo $item['qty']; ?>" min="1" class="form-control form-control-sm cart-qty" data-price="<?php echo $item['harga_jual']; ?>"></td>
+                            <td class="subtotal">Rp <?php echo number_format($item['harga_jual'] * $item['qty'], 0, ',', '.'); ?></td>
                             <td><a href="<?php echo site_url('pos/remove/'.$item['id']); ?>" class="btn btn-sm btn-danger">Hapus</a></td>
                         </tr>
                     <?php endforeach; ?>
@@ -68,7 +68,7 @@
                         <tr>
                             <td colspan="2"><button type="submit" class="btn btn-secondary btn-sm">Update Qty</button></td>
                             <th>Total</th>
-                            <th>Rp <?php echo number_format($total, 0, ',', '.'); ?></th>
+                            <th id="cart-total">Rp <?php echo number_format($total, 0, ',', '.'); ?></th>
                         </tr>
                     </tfoot>
                 </table>
@@ -121,5 +121,32 @@ if (searchInput && categorySelect) {
     searchInput.addEventListener('input', updateProducts);
     categorySelect.addEventListener('change', updateProducts);
 }
+var qtyInputs = document.querySelectorAll('.cart-qty');
+var totalCell = document.getElementById('cart-total');
+
+function recalcTotal() {
+    var total = 0;
+    qtyInputs.forEach(function(input) {
+        var price = parseFloat(input.dataset.price);
+        var qty = parseFloat(input.value) || 0;
+        total += price * qty;
+    });
+    if (totalCell) {
+        totalCell.textContent = 'Rp ' + total.toLocaleString('id-ID');
+    }
+}
+
+qtyInputs.forEach(function(input) {
+    input.addEventListener('input', function() {
+        var price = parseFloat(this.dataset.price);
+        var qty = parseFloat(this.value) || 0;
+        var subtotal = price * qty;
+        var cell = this.closest('tr').querySelector('.subtotal');
+        if (cell) {
+            cell.textContent = 'Rp ' + subtotal.toLocaleString('id-ID');
+        }
+        recalcTotal();
+    });
+});
 </script>
 <?php $this->load->view('templates/footer'); ?>
