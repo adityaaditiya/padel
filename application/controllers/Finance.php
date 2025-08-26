@@ -38,10 +38,10 @@ class Finance extends CI_Controller
             $category = 'semua';
         }
         if (!$start) {
-            $start = date('Y-m-01');
+            $start = date('Y-m-d');
         }
         if (!$end) {
-            $end = date('Y-m-t');
+            $end = date('Y-m-d');
         }
         $data['start_date'] = $start;
         $data['end_date']   = $end;
