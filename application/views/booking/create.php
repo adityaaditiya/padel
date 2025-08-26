@@ -1,4 +1,5 @@
 <?php $this->load->view('templates/header'); ?>
+<?php $this->load->view('store/overlay'); ?>
 <h2>Booking Baru</h2>
 <?php if ($this->session->flashdata('error')): ?>
     <div class="alert alert-danger"><?php echo $this->session->flashdata('error'); ?></div>
@@ -31,6 +32,7 @@
     <a href="<?php echo site_url('booking'); ?>" class="btn btn-secondary">Batal</a>
 </form>
 <script>
-document.getElementById('device_date').value = new Date().toISOString().slice(0,10);
+var now = new Date();
+document.getElementById('device_date').value = now.getFullYear() + '-' + ('0' + (now.getMonth() + 1)).slice(-2) + '-' + ('0' + now.getDate()).slice(-2);
 </script>
 <?php $this->load->view('templates/footer'); ?>

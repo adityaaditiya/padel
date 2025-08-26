@@ -43,6 +43,7 @@ class Booking extends CI_Controller
             redirect('auth/login');
         }
         $data['courts'] = $this->Court_model->get_all();
+        $data['store']  = $this->Store_model->get_current();
         $this->load->view('booking/create', $data);
     }
 

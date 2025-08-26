@@ -1,4 +1,5 @@
 <?php $this->load->view('templates/header'); ?>
+<?php $this->load->view('store/overlay'); ?>
 <h2>Tambah Uang Kas</h2>
 <?php if ($this->session->flashdata('success')): ?>
     <div class="alert alert-success"><?php echo $this->session->flashdata('success'); ?></div>
@@ -28,6 +29,8 @@
     <button type="submit" class="btn btn-primary">Simpan</button>
 </form>
 <script>
-document.getElementById('device_date').value = new Date().toISOString().slice(0,10);
+var now = new Date();
+document.getElementById('device_date').value = now.getFullYear() + '-' + ('0' + (now.getMonth() + 1)).slice(-2) + '-' + ('0' + now.getDate()).slice(-2);
 </script>
 <?php $this->load->view('templates/footer'); ?>
+
