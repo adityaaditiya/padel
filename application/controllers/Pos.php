@@ -31,7 +31,12 @@ class Pos extends CI_Controller
     public function index()
     {
         $this->authorize();
-        $data['products'] = $this->Product_model->get_all();
+        $kategori = $this->input->get('kategori');
+        $keyword  = $this->input->get('q');
+        $data['products'] = $this->Product_model->get_filtered($kategori, $keyword);
+        $data['categories'] = $this->Product_model->get_categories();
+        $data['selected_category'] = $kategori;
+        $data['search_query'] = $keyword;
         $data['cart'] = $this->session->userdata('cart') ?: [];
         $data['total'] = 0;
         foreach ($data['cart'] as $item) {
@@ -39,6 +44,20 @@ class Pos extends CI_Controller
         }
         $data['store'] = $this->Store_model->get_current();
         $this->load->view('pos/index', $data);
+    }
+
+    /**
+     * Endpoint AJAX untuk mengambil daftar produk terfilter.
+     */
+    public function search()
+    {
+        $this->authorize();
+        $kategori = $this->input->get('kategori');
+        $keyword  = $this->input->get('q');
+        $products = $this->Product_model->get_filtered($kategori, $keyword);
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($products));
     }
 
     /**

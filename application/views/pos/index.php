@@ -11,17 +11,35 @@
 <div class="row">
     <div class="col-md-6">
         <h4>Daftar Produk</h4>
-        <div class="list-group">
-        <?php foreach ($products as $p): ?>
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                    <strong><?php echo htmlspecialchars($p->nama_produk); ?></strong><br>
-                    <small>Rp <?php echo number_format($p->harga_jual, 0, ',', '.'); ?></small>
-                </div>
-                <a href="<?php echo site_url('pos/add/'.$p->id); ?>" class="btn btn-sm btn-success">Tambah</a>
-            </div>
-        <?php endforeach; ?>
-        </div>
+        <form class="form-inline mb-2" onsubmit="return false;">
+            <select name="kategori" id="category-filter" class="form-control mr-2">
+                <option value="">Semua Kategori</option>
+                <?php foreach ($categories as $c): ?>
+                    <option value="<?php echo $c->kategori; ?>" <?php echo ($selected_category == $c->kategori) ? 'selected' : ''; ?>><?php echo htmlspecialchars($c->kategori); ?></option>
+                <?php endforeach; ?>
+            </select>
+            <input type="text" name="q" id="product-search" value="<?php echo htmlspecialchars($search_query); ?>" class="form-control mr-2" placeholder="Cari produk">
+        </form>
+        <table id="products-table" class="table table-sm table-bordered">
+            <thead>
+                <tr>
+                    <th>Produk</th>
+                    <th>Harga</th>
+                    <th>Kategori</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($products as $p): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($p->nama_produk); ?></td>
+                    <td>Rp <?php echo number_format($p->harga_jual, 0, ',', '.'); ?></td>
+                    <td><?php echo htmlspecialchars($p->kategori); ?></td>
+                    <td><a href="<?php echo site_url('pos/add/'.$p->id); ?>" class="btn btn-sm btn-success">Tambah</a></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
     <div class="col-md-6">
         <h4>Keranjang</h4>
@@ -67,6 +85,38 @@ var deviceInput = document.getElementById('device_date');
 if (deviceInput) {
     var now = new Date();
     deviceInput.value = now.getFullYear() + '-' + ('0' + (now.getMonth() + 1)).slice(-2) + '-' + ('0' + now.getDate()).slice(-2);
+}
+
+var searchInput = document.getElementById('product-search');
+var categorySelect = document.getElementById('category-filter');
+var productsBody = document.querySelector('#products-table tbody');
+var searchUrl = '<?php echo site_url('pos/search'); ?>';
+var addUrl = '<?php echo site_url('pos/add/'); ?>';
+
+function renderProducts(items) {
+    productsBody.innerHTML = '';
+    items.forEach(function(p) {
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td>' + p.nama_produk + '</td>' +
+                       '<td>Rp ' + Number(p.harga_jual).toLocaleString('id-ID') + '</td>' +
+                       '<td>' + p.kategori + '</td>' +
+                       '<td><a href="' + addUrl + p.id + '" class="btn btn-sm btn-success">Tambah</a></td>';
+        productsBody.appendChild(tr);
+    });
+}
+
+function updateProducts() {
+    var params = new URLSearchParams();
+    if (categorySelect.value) params.append('kategori', categorySelect.value);
+    if (searchInput.value) params.append('q', searchInput.value);
+    fetch(searchUrl + '?' + params.toString())
+        .then(function(r){ return r.json(); })
+        .then(renderProducts);
+}
+
+if (searchInput && categorySelect) {
+    searchInput.addEventListener('input', updateProducts);
+    categorySelect.addEventListener('change', updateProducts);
 }
 </script>
 <?php $this->load->view('templates/footer'); ?>
