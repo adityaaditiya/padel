@@ -21,6 +21,10 @@ class Sale_model extends CI_Model
 
     public function get_all()
     {
-        return $this->db->order_by('tanggal_transaksi', 'DESC')->get($this->table)->result();
+        $this->db->select('s.*, u.nama_lengkap AS customer_name');
+        $this->db->from($this->table . ' s');
+        $this->db->join('users u', 'u.id = s.customer_id', 'left');
+        $this->db->order_by('s.tanggal_transaksi', 'DESC');
+        return $this->db->get()->result();
     }
 }

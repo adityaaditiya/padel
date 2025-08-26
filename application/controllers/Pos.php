@@ -159,6 +159,33 @@ class Pos extends CI_Controller
     }
 
     /**
+     * Perbarui jumlah masing-masing item di keranjang.
+     */
+    public function update_cart()
+    {
+        $this->authorize();
+        if ($this->input->method() !== 'post') {
+            redirect('pos');
+        }
+        $qtys = $this->input->post('qty');
+        $cart = $this->session->userdata('cart') ?: [];
+        if (is_array($qtys)) {
+            foreach ($qtys as $id => $qty) {
+                if (isset($cart[$id])) {
+                    $qty = (int) $qty;
+                    if ($qty > 0) {
+                        $cart[$id]['qty'] = $qty;
+                    } else {
+                        unset($cart[$id]);
+                    }
+                }
+            }
+            $this->session->set_userdata('cart', $cart);
+        }
+        redirect('pos');
+    }
+
+    /**
      * Hapus produk dari keranjang.
      */
     public function remove($id)
@@ -203,7 +230,8 @@ class Pos extends CI_Controller
         $saleData = [
             'id_kasir'      => $this->session->userdata('id'),
             'nomor_nota'    => $nomor_nota,
-            'total_belanja' => $total
+            'total_belanja' => $total,
+            'customer_id'   => $this->input->post('customer_id') ?: null
         ];
         $sale_id = $this->Sale_model->insert($saleData);
         // Simpan detail dan update stok
