@@ -21,6 +21,25 @@ class Member_model extends CI_Model
     }
 
     /**
+     * Cari member berdasarkan keyword sederhana.
+     */
+    public function search($keyword)
+    {
+        $this->db->select('u.id, u.nama_lengkap, u.no_telepon, m.kode_member');
+        $this->db->from('users u');
+        $this->db->join('member_data m', 'm.user_id = u.id', 'left');
+        $this->db->where('u.role', 'pelanggan');
+        if ($keyword) {
+            $this->db->group_start();
+            $this->db->like('u.nama_lengkap', $keyword);
+            $this->db->or_like('m.kode_member', $keyword);
+            $this->db->or_like('u.no_telepon', $keyword);
+            $this->db->group_end();
+        }
+        return $this->db->get()->result();
+    }
+
+    /**
      * Ambil satu member berdasarkan ID user.
      */
     public function get_by_id($id)

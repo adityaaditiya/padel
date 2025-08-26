@@ -49,6 +49,21 @@ class Pos extends CI_Controller
     }
 
     /**
+
+     * Endpoint AJAX untuk pencarian member.
+     */
+    public function member_search()
+    {
+        $this->authorize();
+        $keyword = $this->input->get('q');
+        $members = $this->Member_model->search($keyword);
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($members));
+    }
+
+    /**
+
      * Endpoint AJAX untuk mengambil daftar produk terfilter.
      */
     public function search()
@@ -61,7 +76,6 @@ class Pos extends CI_Controller
             ->set_content_type('application/json')
             ->set_output(json_encode($products));
     }
-
     /**
      * Tambah produk ke keranjang.
      */
@@ -86,7 +100,6 @@ class Pos extends CI_Controller
         $this->session->set_userdata('cart', $cart);
         redirect('pos');
     }
-
     /**
      * Perbarui jumlah masing-masing item di keranjang.
      */

@@ -48,7 +48,6 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-
                             <th>Nota</th>
                             <th>Customer</th>
                             <th>Produk</th>
@@ -63,12 +62,13 @@
                             <?php if ($first): ?>
                                 <td rowspan="<?php echo $rowspan; ?>"><?php echo $nota; ?></td>
                                 <td rowspan="<?php echo $rowspan; ?>">
-                                    <input type="text" name="customer_name" list="member-list" class="form-control form-control-sm" form="checkout-form">
-                                    <datalist id="member-list">
-                                    <?php foreach ($members as $m): ?>
-                                        <option value="<?php echo htmlspecialchars($m->nama_lengkap); ?>"></option>
-                                    <?php endforeach; ?>
-                                    </datalist>
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" name="customer_name" id="customer-name" class="form-control" readonly form="checkout-form">
+                                        <input type="hidden" name="customer_id" id="customer-id" form="checkout-form">
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#memberModal">Pilih</button>
+                                        </div>
+                                    </div>
                                 </td>
                             <?php $first = false; endif; ?>
                             <td><?php echo htmlspecialchars($item['nama_produk']); ?></td>
@@ -80,13 +80,13 @@
                     </tbody>
                     <tfoot>
                         <tr>
+                          <th></th>
                             <th>Total</th>
                             <th id="cart-total">Rp <?php echo number_format($total, 0, ',', '.'); ?></th>
                         </tr>
                     </tfoot>
                 </table>
             </form>
-
             <form method="post" action="<?php echo site_url('pos/checkout'); ?>" id="checkout-form">
                 <input type="hidden" name="device_date" id="device_date">
                 <input type="hidden" name="nota" value="<?php echo $nota; ?>">
@@ -94,8 +94,48 @@
             </form>
         <?php else: ?>
             <p>Keranjang kosong.</p>
-        <?php endif; ?>
+<?php endif; ?>
     </div>
+</div>
+
+<!-- Modal pilih customer -->
+<div class="modal fade" id="memberModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Pilih Customer</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-inline mb-2">
+          <input type="text" id="member-search" class="form-control mr-2" placeholder="Cari customer">
+          <button type="button" id="member-search-btn" class="btn btn-primary btn-sm">Cari</button>
+        </div>
+        <table class="table table-bordered table-sm" id="member-table">
+          <thead>
+            <tr>
+              <th>Kode</th>
+              <th>Nama</th>
+              <th>Telepon</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+          <?php foreach ($members as $m): ?>
+            <tr>
+              <td><?php echo htmlspecialchars($m->kode_member); ?></td>
+              <td><?php echo htmlspecialchars($m->nama_lengkap); ?></td>
+              <td><?php echo htmlspecialchars($m->no_telepon); ?></td>
+              <td><button type="button" class="btn btn-sm btn-success select-member" data-id="<?php echo $m->id; ?>" data-name="<?php echo htmlspecialchars($m->nama_lengkap); ?>">Pilih</button></td>
+            </tr>
+          <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -163,6 +203,47 @@ qtyInputs.forEach(function(input) {
         }
         recalcTotal();
     });
+});
+
+
+var memberSearchInput = document.getElementById('member-search');
+var memberSearchBtn = document.getElementById('member-search-btn');
+var memberTableBody = document.querySelector('#member-table tbody');
+var memberSearchUrl = '<?php echo site_url('pos/member_search'); ?>';
+
+function renderMembers(list) {
+    memberTableBody.innerHTML = '';
+    list.forEach(function(m) {
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td>' + (m.kode_member || '') + '</td>' +
+                       '<td>' + m.nama_lengkap + '</td>' +
+                       '<td>' + (m.no_telepon || '') + '</td>' +
+                       '<td><button type="button" class="btn btn-sm btn-success select-member" data-id="' + m.id + '" data-name="' + m.nama_lengkap + '">Pilih</button></td>';
+        memberTableBody.appendChild(tr);
+    });
+}
+
+function searchMembers() {
+    var params = new URLSearchParams();
+    if (memberSearchInput.value) params.append('q', memberSearchInput.value);
+    fetch(memberSearchUrl + '?' + params.toString())
+        .then(function(r){ return r.json(); })
+        .then(renderMembers);
+}
+
+if (memberSearchBtn && memberSearchInput) {
+    memberSearchBtn.addEventListener('click', searchMembers);
+    memberSearchInput.addEventListener('keyup', function(e){ if (e.key === 'Enter') searchMembers(); });
+}
+
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('select-member')) {
+        var id = e.target.getAttribute('data-id');
+        var name = e.target.getAttribute('data-name');
+        document.getElementById('customer-id').value = id;
+        document.getElementById('customer-name').value = name;
+        $('#memberModal').modal('hide');
+    }
 });
 </script>
 <?php $this->load->view('templates/footer'); ?>
