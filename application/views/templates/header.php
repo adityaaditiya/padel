@@ -53,6 +53,9 @@ $formatted_store_date = $store_date ? date('d-m-Y', strtotime($store_date)) : da
                 <?php endif; ?>
                 <?php if (in_array($role, ['kasir','admin_keuangan','owner'])): ?>
                     <li class="nav-item"><a class="nav-link" href="<?php echo site_url('products'); ?>">Produk</a></li>
+                <?php if ($role === 'kasir'): ?>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo site_url('members'); ?>">Data Member</a></li>
+                <?php endif; ?>
                 <?php endif; ?>
             <?php endif; ?>
 
