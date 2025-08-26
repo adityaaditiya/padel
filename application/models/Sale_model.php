@@ -26,11 +26,14 @@ class Sale_model extends CI_Model
         return $this->db->get_where($this->table, ['id' => $id])->row();
     }
 
-    public function get_all()
+    public function get_all($date = null)
     {
         $this->db->select('s.*, u.nama_lengkap AS customer_name');
         $this->db->from($this->table . ' s');
         $this->db->join('users u', 'u.id = s.customer_id', 'left');
+        if ($date) {
+            $this->db->where('DATE(s.tanggal_transaksi)', $date);
+        }
         $this->db->order_by('s.tanggal_transaksi', 'DESC');
         return $this->db->get()->result();
     }
