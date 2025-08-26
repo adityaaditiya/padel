@@ -33,7 +33,13 @@ class Store_model extends CI_Model
     public function validate_device_date($device_date)
     {
         $current = $this->get_current();
-        if (!$current || !$current->is_open) {
+        if (!$current) {
+            return 'Toko belum dibuka';
+        }
+        if ($current->is_open && $current->store_date < $device_date) {
+            return 'Toko belum ditutup';
+        }
+        if (!$current->is_open) {
             return 'Toko belum dibuka';
         }
         if ($current->store_date !== $device_date) {

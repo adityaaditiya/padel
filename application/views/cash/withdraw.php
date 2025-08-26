@@ -1,4 +1,5 @@
 <?php $this->load->view('templates/header'); ?>
+<?php $this->load->view('store/overlay'); ?>
 <h2>Ambil Uang Kas</h2>
 <?php if ($this->session->flashdata('success')): ?>
     <div class="alert alert-success"><?php echo $this->session->flashdata('success'); ?></div>
