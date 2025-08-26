@@ -121,7 +121,6 @@ if (searchInput && categorySelect) {
     searchInput.addEventListener('input', updateProducts);
     categorySelect.addEventListener('change', updateProducts);
 }
-
 var qtyInputs = document.querySelectorAll('.cart-qty');
 var totalCell = document.getElementById('cart-total');
 
