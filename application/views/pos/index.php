@@ -244,5 +244,16 @@ document.addEventListener('click', function(e) {
         $('#memberModal').modal('hide');
     }
 });
+
+var checkoutForm = document.getElementById('checkout-form');
+if (checkoutForm) {
+    checkoutForm.addEventListener('submit', function(e) {
+        var customerId = document.getElementById('customer-id').value;
+        if (!customerId) {
+            e.preventDefault();
+            alert('Pilih customer terlebih dahulu.');
+        }
+    });
+}
 </script>
 <?php $this->load->view('templates/footer'); ?>
