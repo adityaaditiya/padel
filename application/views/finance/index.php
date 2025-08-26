@@ -58,6 +58,11 @@
     </tfoot>
 </table>
 
+<div class="mt-3">
+    <button id="exportPdf" class="btn btn-secondary">Export PDF</button>
+    <button id="exportExcel" class="btn btn-success ml-2">Export Excel</button>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('search');
@@ -92,6 +97,40 @@ document.addEventListener('DOMContentLoaded', function() {
             searchInput.classList.remove('is-invalid');
         }
     });
+});
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+document.getElementById('exportPdf').addEventListener('click', function () {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const title = document.querySelector('h2').innerText.trim();
+    const start = document.getElementById('start_date').value;
+    const end = document.getElementById('end_date').value;
+    doc.text(title, 14, 15);
+    doc.text(`Periode: ${start} s/d ${end}`, 14, 25);
+    doc.autoTable({ html: '#financeTable', startY: 30 });
+    doc.save('laporan_keuangan.pdf');
+});
+
+document.getElementById('exportExcel').addEventListener('click', function () {
+    const table = document.getElementById('financeTable');
+    const wb = XLSX.utils.book_new();
+    const tableData = XLSX.utils.sheet_to_json(XLSX.utils.table_to_sheet(table), { header: 1 });
+    const title = document.querySelector('h2').innerText.trim();
+    const start = document.getElementById('start_date').value;
+    const end = document.getElementById('end_date').value;
+    const wsData = [];
+    wsData.push([title]);
+    wsData.push([`Periode: ${start} s/d ${end}`]);
+    wsData.push([]);
+    wsData.push(...tableData);
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    XLSX.utils.book_append_sheet(wb, ws, 'Laporan');
+    XLSX.writeFile(wb, 'laporan_keuangan.xlsx');
 });
 </script>
 
