@@ -74,22 +74,20 @@ class Pos extends CI_Controller
             ->set_content_type('application/json')
             ->set_output(json_encode($products));
     }
-
     public function transactions()
     {
         $this->authorize();
-        $from = $this->input->get('from');
-        $to   = $this->input->get('to');
-        $data['from'] = $from;
-        $data['to'] = $to;
-        $data['sales'] = $this->Sale_model->get_all($from, $to);
+        $start = $this->input->get('start');
+        $end   = $this->input->get('end');
+        $data['filter_start'] = $start;
+        $data['filter_end']   = $end;
+        $data['sales'] = ($start && $end) ? $this->Sale_model->get_all($start, $end) : [];
         $this->load->view('pos/transactions', $data);
     }
     /**
      * Tambah produk ke keranjang.
      */
-    
-  public function add($id)
+    public function add($id)
     {
         $this->authorize();
         $product = $this->Product_model->get_by_id($id);
@@ -110,33 +108,6 @@ class Pos extends CI_Controller
         $this->session->set_userdata('cart', $cart);
         redirect('pos');
     }
-    /**
-     * Perbarui jumlah masing-masing item di keranjang.
-     */
-    public function update_cart()
-    {
-        $this->authorize();
-        if ($this->input->method() !== 'post') {
-            redirect('pos');
-        }
-        $qtys = $this->input->post('qty');
-        $cart = $this->session->userdata('cart') ?: [];
-        if (is_array($qtys)) {
-            foreach ($qtys as $id => $qty) {
-                if (isset($cart[$id])) {
-                    $qty = (int) $qty;
-                    if ($qty > 0) {
-                        $cart[$id]['qty'] = $qty;
-                    } else {
-                        unset($cart[$id]);
-                    }
-                }
-            }
-            $this->session->set_userdata('cart', $cart);
-        }
-        redirect('pos');
-    }
-
     /**
      * Perbarui jumlah masing-masing item di keranjang.
      */
