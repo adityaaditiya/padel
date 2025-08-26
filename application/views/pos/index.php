@@ -44,32 +44,35 @@
     <div class="col-md-6">
         <h4>Keranjang</h4>
         <?php if (!empty($cart)): ?>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Produk</th>
-                        <th>Qty</th>
-                        <th>Subtotal</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($cart as $item): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($item['nama_produk']); ?></td>
-                        <td><?php echo $item['qty']; ?></td>
-                        <td>Rp <?php echo number_format($item['harga_jual'] * $item['qty'], 0, ',', '.'); ?></td>
-                        <td><a href="<?php echo site_url('pos/remove/'.$item['id']); ?>" class="btn btn-sm btn-danger">Hapus</a></td>
-                    </tr>
-                <?php endforeach; ?>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th colspan="2">Total</th>
-                        <th colspan="2">Rp <?php echo number_format($total, 0, ',', '.'); ?></th>
-                    </tr>
-                </tfoot>
-            </table>
+            <form method="post" action="<?php echo site_url('pos/update_cart'); ?>">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Produk</th>
+                            <th>Qty</th>
+                            <th>Subtotal</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($cart as $item): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($item['nama_produk']); ?></td>
+                            <td><input type="number" name="qty[<?php echo $item['id']; ?>]" value="<?php echo $item['qty']; ?>" min="1" class="form-control form-control-sm"></td>
+                            <td>Rp <?php echo number_format($item['harga_jual'] * $item['qty'], 0, ',', '.'); ?></td>
+                            <td><a href="<?php echo site_url('pos/remove/'.$item['id']); ?>" class="btn btn-sm btn-danger">Hapus</a></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2"><button type="submit" class="btn btn-secondary btn-sm">Update Qty</button></td>
+                            <th>Total</th>
+                            <th>Rp <?php echo number_format($total, 0, ',', '.'); ?></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </form>
             <form method="post" action="<?php echo site_url('pos/checkout'); ?>">
                 <input type="hidden" name="device_date" id="device_date">
                 <button type="submit" class="btn btn-primary">Checkout</button>
