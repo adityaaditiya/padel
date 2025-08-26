@@ -22,4 +22,13 @@ class Payment_model extends CI_Model
     {
         return $this->db->get_where($this->table, ['id_sale' => $sale_id])->result();
     }
+
+    /**
+     * Ambil ID penjualan berikutnya sebagai nomor nota sederhana.
+     */
+    public function get_next_sale_id()
+    {
+        $row = $this->db->select_max('id_sale')->get($this->table)->row();
+        return $row && $row->id_sale ? $row->id_sale + 1 : 1;
+    }
 }
