@@ -41,7 +41,7 @@ class Store extends CI_Controller
             $this->session->set_flashdata('error', 'Toko sudah dibuka.');
         } else {
             $this->Store_model->open($date);
-            $this->session->set_flashdata('success', 'Tanggal toko dibuka.');
+            $this->session->set_flashdata('success', 'Toko dibuka pada tanggal: ' . $date);
         }
         redirect('store');
     }
@@ -53,8 +53,8 @@ class Store extends CI_Controller
         if (!$current || !$current->is_open) {
             $this->session->set_flashdata('error', 'Toko belum dibuka.');
         } else {
-            $this->Store_model->close();
-            $this->session->set_flashdata('success', 'Toko ditutup.');
+            $next = $this->Store_model->close();
+            $this->session->set_flashdata('success', 'Toko ditutup pada tanggal: ' . $current->store_date . '. Tanggal berikutnya: ' . $next);
         }
         redirect('store');
     }

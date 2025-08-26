@@ -1,4 +1,5 @@
 <?php $this->load->view('templates/header'); ?>
+<?php $this->load->view('store/overlay'); ?>
 <h2>Point of Sale</h2>
 <?php if ($this->session->flashdata('success')): ?>
     <div class="alert alert-success"><?php echo $this->session->flashdata('success'); ?></div>
@@ -62,6 +63,10 @@
 </div>
 
 <script>
-document.getElementById('device_date') && (document.getElementById('device_date').value = new Date().toISOString().slice(0,10));
+var deviceInput = document.getElementById('device_date');
+if (deviceInput) {
+    var now = new Date();
+    deviceInput.value = now.getFullYear() + '-' + ('0' + (now.getMonth() + 1)).slice(-2) + '-' + ('0' + now.getDate()).slice(-2);
+}
 </script>
 <?php $this->load->view('templates/footer'); ?>

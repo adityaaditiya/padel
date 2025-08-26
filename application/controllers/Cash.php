@@ -42,7 +42,8 @@ class Cash extends CI_Controller
             }
             redirect('cash/add');
         }
-        $this->load->view('cash/add');
+        $data['store'] = $this->Store_model->get_current();
+        $this->load->view('cash/add', $data);
     }
 
     public function withdraw()
@@ -65,6 +66,7 @@ class Cash extends CI_Controller
             }
             redirect('cash/withdraw');
         }
-        $this->load->view('cash/withdraw');
+        $data['store'] = $this->Store_model->get_current();
+        $this->load->view('cash/withdraw', $data);
     }
 }
