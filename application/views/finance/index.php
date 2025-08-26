@@ -17,7 +17,11 @@
     <button type="submit" class="btn btn-primary">Tampilkan</button>
 </form>
 
-<table class="table table-bordered">
+<div class="form-group mb-3">
+    <input type="text" id="search" class="form-control" placeholder="Cari...">
+    <div class="invalid-feedback">Tidak ada hasil ditemukan.</div>
+</div>
+<table class="table table-bordered" id="financeTable">
     <thead>
         <tr>
             <th>Tanggal</th>
@@ -54,6 +58,43 @@
         </tr>
     </tfoot>
 </table>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search');
+    const tableBody = document.getElementById('financeTable').getElementsByTagName('tbody')[0];
+    const rows = tableBody.getElementsByTagName('tr');
+
+    const noSearchRow = document.createElement('tr');
+    noSearchRow.id = 'noSearchResults';
+    noSearchRow.innerHTML = '<td colspan="4" class="text-center">Tidak ada hasil</td>';
+    noSearchRow.style.display = 'none';
+    tableBody.appendChild(noSearchRow);
+
+    searchInput.addEventListener('input', function() {
+        const filter = this.value.toLowerCase();
+        let visible = 0;
+        for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            if (row.id === 'noSearchResults') continue;
+            const text = row.textContent.toLowerCase();
+            if (text.includes(filter)) {
+                row.style.display = '';
+                visible++;
+            } else {
+                row.style.display = 'none';
+            }
+        }
+        if (visible === 0 && filter !== '') {
+            noSearchRow.style.display = '';
+            searchInput.classList.add('is-invalid');
+        } else {
+            noSearchRow.style.display = 'none';
+            searchInput.classList.remove('is-invalid');
+        }
+    });
+});
+</script>
 
 <?php $this->load->view('templates/footer'); ?>
 
