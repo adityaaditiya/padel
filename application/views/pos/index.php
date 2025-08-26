@@ -48,6 +48,9 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
+
+                            <th>Nota</th>
+                            <th>Customer</th>
                             <th>Produk</th>
                             <th>Qty</th>
                             <th>Subtotal</th>
@@ -55,8 +58,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($cart as $item): ?>
+                    <?php $first = true; $rowspan = count($cart); foreach ($cart as $item): ?>
                         <tr>
+                            <?php if ($first): ?>
+                                <td rowspan="<?php echo $rowspan; ?>"><?php echo $nota; ?></td>
+                                <td rowspan="<?php echo $rowspan; ?>">
+                                    <input type="text" name="customer_name" list="member-list" class="form-control form-control-sm" form="checkout-form">
+                                    <datalist id="member-list">
+                                    <?php foreach ($members as $m): ?>
+                                        <option value="<?php echo htmlspecialchars($m->nama_lengkap); ?>"></option>
+                                    <?php endforeach; ?>
+                                    </datalist>
+                                </td>
+                            <?php $first = false; endif; ?>
                             <td><?php echo htmlspecialchars($item['nama_produk']); ?></td>
                             <td><input type="number" name="qty[<?php echo $item['id']; ?>]" value="<?php echo $item['qty']; ?>" min="1" class="form-control form-control-sm cart-qty" data-price="<?php echo $item['harga_jual']; ?>"></td>
                             <td class="subtotal">Rp <?php echo number_format($item['harga_jual'] * $item['qty'], 0, ',', '.'); ?></td>
@@ -66,15 +80,16 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="2"><button type="submit" class="btn btn-secondary btn-sm">Update Qty</button></td>
                             <th>Total</th>
                             <th id="cart-total">Rp <?php echo number_format($total, 0, ',', '.'); ?></th>
                         </tr>
                     </tfoot>
                 </table>
             </form>
-            <form method="post" action="<?php echo site_url('pos/checkout'); ?>">
+
+            <form method="post" action="<?php echo site_url('pos/checkout'); ?>" id="checkout-form">
                 <input type="hidden" name="device_date" id="device_date">
+                <input type="hidden" name="nota" value="<?php echo $nota; ?>">
                 <button type="submit" class="btn btn-primary">Checkout</button>
             </form>
         <?php else: ?>
@@ -121,6 +136,7 @@ if (searchInput && categorySelect) {
     searchInput.addEventListener('input', updateProducts);
     categorySelect.addEventListener('change', updateProducts);
 }
+
 var qtyInputs = document.querySelectorAll('.cart-qty');
 var totalCell = document.getElementById('cart-total');
 

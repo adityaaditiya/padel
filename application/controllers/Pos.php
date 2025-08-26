@@ -9,7 +9,7 @@ class Pos extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(['Product_model','Sale_model','Sale_detail_model','Payment_model','Store_model']);
+        $this->load->model(['Product_model','Sale_model','Sale_detail_model','Payment_model','Store_model','Member_model']);
         $this->load->library('session');
         $this->load->helper(['url']);
     }
@@ -43,6 +43,8 @@ class Pos extends CI_Controller
             $data['total'] += $item['harga_jual'] * $item['qty'];
         }
         $data['store'] = $this->Store_model->get_current();
+        $data['nota'] = $this->Payment_model->get_next_sale_id();
+        $data['members'] = $this->Member_model->get_all();
         $this->load->view('pos/index', $data);
     }
 
