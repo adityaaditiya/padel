@@ -16,7 +16,7 @@
     <form method="post" action="<?php echo site_url('store/open'); ?>" onsubmit="return confirm('Buka toko untuk tanggal ' + document.getElementById('store_date').value + '?');">
         <div class="form-group">
             <label for="store_date">Tanggal Toko</label>
-            <input type="date" name="store_date" id="store_date" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
+            <input type="date" name="store_date" id="store_date" class="form-control" value="<?php echo $store ? $store->store_date : date('Y-m-d'); ?>" required>
         </div>
         <button type="submit" class="btn btn-primary">Buka Toko</button>
     </form>

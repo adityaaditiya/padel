@@ -32,11 +32,14 @@ class Store extends CI_Controller
     public function open()
     {
         $this->authorize();
-        $date = $this->input->post('store_date');
+        $date    = $this->input->post('store_date');
+        $current = $this->Store_model->get_current();
+        if (!$date && $current) {
+            $date = $current->store_date;
+        }
         if (!$date) {
             $date = date('Y-m-d');
         }
-        $current = $this->Store_model->get_current();
         if ($current && $current->is_open) {
             $this->session->set_flashdata('error', 'Toko sudah dibuka.');
         } else {
