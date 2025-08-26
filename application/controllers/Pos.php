@@ -47,6 +47,20 @@ class Pos extends CI_Controller
     }
 
     /**
+     * Endpoint AJAX untuk mengambil daftar produk terfilter.
+     */
+    public function search()
+    {
+        $this->authorize();
+        $kategori = $this->input->get('kategori');
+        $keyword  = $this->input->get('q');
+        $products = $this->Product_model->get_filtered($kategori, $keyword);
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($products));
+    }
+
+    /**
      * Tambah produk ke keranjang.
      */
     public function add($id)
