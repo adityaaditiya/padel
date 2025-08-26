@@ -36,7 +36,13 @@ $formatted_store_date = $store_date ? date('d-m-Y', strtotime($store_date)) : da
                     </div>
                 </li>
                 <?php if (in_array($role, ['kasir','admin_keuangan','owner'])): ?>
-                    <li class="nav-item"><a class="nav-link" href="<?php echo site_url('pos'); ?>">POS</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="posDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">POS</a>
+                        <div class="dropdown-menu" aria-labelledby="posDropdown">
+                            <a class="dropdown-item" href="<?php echo site_url('pos'); ?>">Tambah Transaksi</a>
+                            <a class="dropdown-item" href="<?php echo site_url('products'); ?>">Tambah Produk</a>
+                        </div>
+                    </li>
                 <?php endif; ?>
                 <?php if ($role === 'owner'): ?>
                     <li class="nav-item"><a class="nav-link" href="<?php echo site_url('reports'); ?>">Laporan</a></li>
@@ -51,8 +57,8 @@ $formatted_store_date = $store_date ? date('d-m-Y', strtotime($store_date)) : da
                     </li>
                     <li class="nav-item"><a class="nav-link" href="<?php echo site_url('finance'); ?>">Keuangan</a></li>
                 <?php endif; ?>
-                <?php if (in_array($role, ['kasir','admin_keuangan','owner'])): ?>
-                    <li class="nav-item"><a class="nav-link" href="<?php echo site_url('products'); ?>">Produk</a></li>
+                <?php if ($role === 'kasir'): ?>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo site_url('members'); ?>">Data Member</a></li>
                 <?php endif; ?>
             <?php endif; ?>
 
