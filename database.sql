@@ -49,10 +49,12 @@ CREATE TABLE products (
 CREATE TABLE sales (
   id INT AUTO_INCREMENT PRIMARY KEY,
   id_kasir INT NOT NULL,
+  customer_id INT DEFAULT NULL,
   nomor_nota VARCHAR(50) NOT NULL UNIQUE,
   total_belanja DECIMAL(10,2) NOT NULL,
   tanggal_transaksi DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (id_kasir) REFERENCES users(id)
+  FOREIGN KEY (id_kasir) REFERENCES users(id),
+  FOREIGN KEY (customer_id) REFERENCES users(id)
 );
 
 CREATE TABLE sale_details (
