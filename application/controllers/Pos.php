@@ -49,8 +49,6 @@ class Pos extends CI_Controller
         }
         $data['nomor_nota'] = $nomor_nota;
         $data['members'] = $this->Member_model->get_all();
-        $data['store'] = $this->Store_model->get_current();
-        $this->load->view('pos/index', $data);
     }
 
     /**

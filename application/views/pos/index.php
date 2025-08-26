@@ -94,7 +94,6 @@ if (deviceInput) {
     var now = new Date();
     deviceInput.value = now.getFullYear() + '-' + ('0' + (now.getMonth() + 1)).slice(-2) + '-' + ('0' + now.getDate()).slice(-2);
 }
-
 var memberSelect = document.getElementById('member_id');
 var nonMember = document.getElementById('non_member_name');
 if (memberSelect && nonMember) {
