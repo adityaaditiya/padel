@@ -164,6 +164,12 @@ class Pos extends CI_Controller
             redirect('pos');
             return;
         }
+        $customerId = $this->input->post('customer_id');
+        if (!$customerId) {
+            $this->session->set_flashdata('error', 'Customer wajib dipilih.');
+            redirect('pos');
+            return;
+        }
         $cart = $this->session->userdata('cart') ?: [];
         if (empty($cart)) {
             $this->session->set_flashdata('error', 'Keranjang kosong.');
@@ -181,7 +187,7 @@ class Pos extends CI_Controller
             'id_kasir'      => $this->session->userdata('id'),
             'nomor_nota'    => $nomor_nota,
             'total_belanja' => $total,
-            'customer_id'   => $this->input->post('customer_id') ?: null
+            'customer_id'   => $customerId
         ];
         $sale_id = $this->Sale_model->insert($saleData);
         // Simpan detail dan update stok
