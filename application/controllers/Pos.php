@@ -77,9 +77,11 @@ class Pos extends CI_Controller
     public function transactions()
     {
         $this->authorize();
-        $date = $this->input->get('date');
-        $data['filter_date'] = $date;
-        $data['sales'] = $date ? $this->Sale_model->get_all($date) : [];
+        $start = $this->input->get('start');
+        $end   = $this->input->get('end');
+        $data['filter_start'] = $start;
+        $data['filter_end']   = $end;
+        $data['sales'] = ($start && $end) ? $this->Sale_model->get_all($start, $end) : [];
         $this->load->view('pos/transactions', $data);
     }
     /**

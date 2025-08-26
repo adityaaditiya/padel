@@ -1,13 +1,14 @@
 <?php $this->load->view('templates/header'); ?>
 <h2>Daftar Transaksi POS</h2>
 <form method="get" class="mb-3">
-    <input type="date" name="date" value="<?php echo htmlspecialchars($filter_date); ?>">
-    <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+    <input type="date" name="start" value="<?php echo htmlspecialchars($filter_start); ?>">
+    <input type="date" name="end" value="<?php echo htmlspecialchars($filter_end); ?>">
+    <button type="submit" class="btn btn-primary btn-sm px-2">Cari</button>
 </form>
 
-<?php if ($filter_date): ?>
+<?php if ($filter_start && $filter_end): ?>
     <?php if (!empty($sales)): ?>
-        <input type="text" id="search" class="form-control form-control-sm mb-2" placeholder="Cari transaksi...">
+        <input type="text" id="search" class="form-control form-control-sm mb-2" placeholder="Cari transaksi..." style="max-width:200px;display:inline-block;">
         <div id="search-error" class="text-danger mb-2" style="display:none;">Data tidak ditemukan.</div>
         <table class="table table-bordered table-sm" id="transaction-table">
             <thead>
@@ -30,10 +31,10 @@
             </tbody>
         </table>
     <?php else: ?>
-        <p>Tidak ada transaksi pada tanggal tersebut.</p>
+        <p>Tidak ada transaksi pada rentang tanggal tersebut.</p>
     <?php endif; ?>
 <?php else: ?>
-    <p>Silakan pilih tanggal untuk melihat transaksi.</p>
+    <p>Silakan pilih rentang tanggal untuk melihat transaksi.</p>
 <?php endif; ?>
 <?php $this->load->view('templates/footer'); ?>
 <script>
