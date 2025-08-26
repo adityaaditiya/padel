@@ -42,12 +42,21 @@ class Booking extends CI_Controller
         if (!$this->session->userdata('logged_in')) {
             redirect('auth/login');
         }
-        $user_id = $this->session->userdata('id');
-        $member  = $this->Member_model->get_by_id($user_id);
-        if (!$member || empty($member->alamat) || empty($member->kecamatan) || empty($member->kota) || empty($member->provinsi)) {
-            $this->session->set_flashdata('error', 'Lengkapi data member pada menu setting data member untuk melanjutkan booking.');
-            redirect('members/profile');
-            return;
+        $role = $this->session->userdata('role');
+        if ($role === 'pelanggan') {
+            $user_id = $this->session->userdata('id');
+            $member  = $this->Member_model->get_by_id($user_id);
+            if (
+                !$member ||
+                empty($member->alamat) ||
+                empty($member->kecamatan) ||
+                empty($member->kota) ||
+                empty($member->provinsi)
+            ) {
+                $this->session->set_flashdata('error', 'Lengkapi data member dulu untuk melanjutkan booking.');
+                redirect('members/profile');
+                return;
+            }
         }
         $data['courts'] = $this->Court_model->get_all();
         $data['store']  = $this->Store_model->get_current();
@@ -61,6 +70,22 @@ class Booking extends CI_Controller
     {
         if (!$this->session->userdata('logged_in')) {
             redirect('auth/login');
+        }
+        $role = $this->session->userdata('role');
+        if ($role === 'pelanggan') {
+            $user_id = $this->session->userdata('id');
+            $member  = $this->Member_model->get_by_id($user_id);
+            if (
+                !$member ||
+                empty($member->alamat) ||
+                empty($member->kecamatan) ||
+                empty($member->kota) ||
+                empty($member->provinsi)
+            ) {
+                $this->session->set_flashdata('error', 'Lengkapi data member pada menu setting data member untuk melanjutkan booking.');
+                redirect('members/profile');
+                return;
+            }
         }
         $error = $this->Store_model->validate_device_date($this->input->post('device_date'));
         if ($error) {
