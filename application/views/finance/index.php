@@ -58,6 +58,10 @@
     </tfoot>
 </table>
 
+<div class="mt-3">
+    <button id="exportPdf" class="btn btn-secondary">Export PDF</button>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('search');
@@ -92,6 +96,17 @@ document.addEventListener('DOMContentLoaded', function() {
             searchInput.classList.remove('is-invalid');
         }
     });
+});
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+<script>
+document.getElementById('exportPdf').addEventListener('click', function () {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.autoTable({ html: '#financeTable' });
+    doc.save('laporan_keuangan.pdf');
 });
 </script>
 
