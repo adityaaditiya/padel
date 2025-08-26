@@ -11,7 +11,7 @@ class Booking extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(['Court_model','Booking_model','Store_model']);
+        $this->load->model(['Court_model','Booking_model','Store_model','Member_model']);
         $this->load->library(['session','form_validation']);
         $this->load->helper(['url','form']);
     }
@@ -42,6 +42,22 @@ class Booking extends CI_Controller
         if (!$this->session->userdata('logged_in')) {
             redirect('auth/login');
         }
+        $role = $this->session->userdata('role');
+        if ($role === 'pelanggan') {
+            $user_id = $this->session->userdata('id');
+            $member  = $this->Member_model->get_by_id($user_id);
+            if (
+                !$member ||
+                empty($member->alamat) ||
+                empty($member->kecamatan) ||
+                empty($member->kota) ||
+                empty($member->provinsi)
+            ) {
+                $this->session->set_flashdata('error', 'Lengkapi data member pada menu setting data member untuk melanjutkan booking.');
+                redirect('members/profile');
+                return;
+            }
+        }
         $data['courts'] = $this->Court_model->get_all();
         $data['store']  = $this->Store_model->get_current();
         $this->load->view('booking/create', $data);
@@ -54,6 +70,22 @@ class Booking extends CI_Controller
     {
         if (!$this->session->userdata('logged_in')) {
             redirect('auth/login');
+        }
+        $role = $this->session->userdata('role');
+        if ($role === 'pelanggan') {
+            $user_id = $this->session->userdata('id');
+            $member  = $this->Member_model->get_by_id($user_id);
+            if (
+                !$member ||
+                empty($member->alamat) ||
+                empty($member->kecamatan) ||
+                empty($member->kota) ||
+                empty($member->provinsi)
+            ) {
+                $this->session->set_flashdata('error', 'Lengkapi data member pada menu setting data member untuk melanjutkan booking.');
+                redirect('members/profile');
+                return;
+            }
         }
         $error = $this->Store_model->validate_device_date($this->input->post('device_date'));
         if ($error) {
@@ -69,6 +101,11 @@ class Booking extends CI_Controller
         if ($this->form_validation->run() === TRUE) {
             $id_court = $this->input->post('id_court');
             $date     = $this->input->post('tanggal_booking');
+            if (strtotime($date) < strtotime(date('Y-m-d'))) {
+                $this->session->set_flashdata('error', 'Tanggal booking tidak boleh sebelum hari ini.');
+                redirect('booking/create');
+                return;
+            }
             $start    = $this->input->post('jam_mulai');
             $end      = $this->input->post('jam_selesai');
             $durasi   = (strtotime($end) - strtotime($start)) / 3600;

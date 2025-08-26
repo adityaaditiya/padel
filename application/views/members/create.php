@@ -20,19 +20,19 @@
     </div>
     <div class="form-group">
         <label for="alamat">Alamat / Jalan</label>
-        <input type="text" name="alamat" id="alamat" class="form-control" value="<?php echo set_value('alamat'); ?>">
+        <input type="text" name="alamat" id="alamat" class="form-control" value="<?php echo set_value('alamat'); ?>" required>
     </div>
     <div class="form-group">
         <label for="kecamatan">Kecamatan</label>
-        <input type="text" name="kecamatan" id="kecamatan" class="form-control" value="<?php echo set_value('kecamatan'); ?>">
+        <input type="text" name="kecamatan" id="kecamatan" class="form-control" value="<?php echo set_value('kecamatan'); ?>" required>
     </div>
     <div class="form-group">
         <label for="kota">Kota</label>
-        <input type="text" name="kota" id="kota" class="form-control" value="<?php echo set_value('kota'); ?>">
+        <input type="text" name="kota" id="kota" class="form-control" value="<?php echo set_value('kota'); ?>" required>
     </div>
     <div class="form-group">
         <label for="provinsi">Provinsi</label>
-        <input type="text" name="provinsi" id="provinsi" class="form-control" value="<?php echo set_value('provinsi'); ?>">
+        <input type="text" name="provinsi" id="provinsi" class="form-control" value="<?php echo set_value('provinsi'); ?>" required>
     </div>
     <button type="submit" class="btn btn-primary">Simpan</button>
     <a href="<?php echo site_url('members'); ?>" class="btn btn-secondary">Batal</a>
