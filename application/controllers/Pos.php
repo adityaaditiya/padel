@@ -49,7 +49,6 @@ class Pos extends CI_Controller
     }
 
     /**
-
      * Endpoint AJAX untuk pencarian member.
      */
     public function member_search()
@@ -63,7 +62,6 @@ class Pos extends CI_Controller
     }
 
     /**
-
      * Endpoint AJAX untuk mengambil daftar produk terfilter.
      */
     public function search()
@@ -75,6 +73,12 @@ class Pos extends CI_Controller
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($products));
+    }
+    public function transactions()
+    {
+        $this->authorize();
+        $data['sales'] = $this->Sale_model->get_all();
+        $this->load->view('pos/transactions', $data);
     }
     /**
      * Tambah produk ke keranjang.
@@ -100,6 +104,33 @@ class Pos extends CI_Controller
         $this->session->set_userdata('cart', $cart);
         redirect('pos');
     }
+    /**
+     * Perbarui jumlah masing-masing item di keranjang.
+     */
+    public function update_cart()
+    {
+        $this->authorize();
+        if ($this->input->method() !== 'post') {
+            redirect('pos');
+        }
+        $qtys = $this->input->post('qty');
+        $cart = $this->session->userdata('cart') ?: [];
+        if (is_array($qtys)) {
+            foreach ($qtys as $id => $qty) {
+                if (isset($cart[$id])) {
+                    $qty = (int) $qty;
+                    if ($qty > 0) {
+                        $cart[$id]['qty'] = $qty;
+                    } else {
+                        unset($cart[$id]);
+                    }
+                }
+            }
+            $this->session->set_userdata('cart', $cart);
+        }
+        redirect('pos');
+    }
+
     /**
      * Perbarui jumlah masing-masing item di keranjang.
      */

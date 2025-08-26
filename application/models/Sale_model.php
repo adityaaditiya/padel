@@ -18,4 +18,9 @@ class Sale_model extends CI_Model
     {
         return $this->db->get_where($this->table, ['id' => $id])->row();
     }
+
+    public function get_all()
+    {
+        return $this->db->order_by('tanggal_transaksi', 'DESC')->get($this->table)->result();
+    }
 }
