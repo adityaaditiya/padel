@@ -10,7 +10,8 @@
 (function(){
     var storeDate = '<?php echo isset($store->store_date) ? $store->store_date : ''; ?>';
     var isOpen = <?php echo isset($store->is_open) && $store->is_open ? 'true' : 'false'; ?>;
-    var deviceDate = new Date().toISOString().slice(0,10);
+    var now = new Date();
+    var deviceDate = now.getFullYear() + '-' + ('0' + (now.getMonth() + 1)).slice(-2) + '-' + ('0' + now.getDate()).slice(-2);
     var message = '';
     if (!isOpen) {
         message = 'Toko belum dibuka';

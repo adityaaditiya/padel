@@ -29,6 +29,8 @@
     <button type="submit" class="btn btn-primary">Simpan</button>
 </form>
 <script>
-document.getElementById('device_date').value = new Date().toISOString().slice(0,10);
+var now = new Date();
+document.getElementById('device_date').value = now.getFullYear() + '-' + ('0' + (now.getMonth() + 1)).slice(-2) + '-' + ('0' + now.getDate()).slice(-2);
 </script>
 <?php $this->load->view('templates/footer'); ?>
+
