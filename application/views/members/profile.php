@@ -27,19 +27,19 @@
     </div>
     <div class="form-group">
         <label for="alamat">Alamat / Jalan</label>
-        <input type="text" name="alamat" id="alamat" class="form-control" value="<?php echo set_value('alamat', $member->alamat); ?>">
+        <input type="text" name="alamat" id="alamat" class="form-control" value="<?php echo set_value('alamat', $member->alamat); ?>" required>
     </div>
     <div class="form-group">
         <label for="kecamatan">Kecamatan</label>
-        <input type="text" name="kecamatan" id="kecamatan" class="form-control" value="<?php echo set_value('kecamatan', $member->kecamatan); ?>">
+        <input type="text" name="kecamatan" id="kecamatan" class="form-control" value="<?php echo set_value('kecamatan', $member->kecamatan); ?>" required>
     </div>
     <div class="form-group">
         <label for="kota">Kota</label>
-        <input type="text" name="kota" id="kota" class="form-control" value="<?php echo set_value('kota', $member->kota); ?>">
+        <input type="text" name="kota" id="kota" class="form-control" value="<?php echo set_value('kota', $member->kota); ?>" required>
     </div>
     <div class="form-group">
         <label for="provinsi">Provinsi</label>
-        <input type="text" name="provinsi" id="provinsi" class="form-control" value="<?php echo set_value('provinsi', $member->provinsi); ?>">
+        <input type="text" name="provinsi" id="provinsi" class="form-control" value="<?php echo set_value('provinsi', $member->provinsi); ?>" required>
     </div>
     <button type="submit" class="btn btn-primary">Update</button>
 </form>

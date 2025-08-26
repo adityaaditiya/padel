@@ -44,6 +44,10 @@ class Members extends CI_Controller
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
         $this->form_validation->set_rules('no_telepon', 'No Telepon', 'required');
         $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
+        $this->form_validation->set_rules('alamat', 'Alamat', 'required');
+        $this->form_validation->set_rules('kecamatan', 'Kecamatan', 'required');
+        $this->form_validation->set_rules('kota', 'Kota', 'required');
+        $this->form_validation->set_rules('provinsi', 'Provinsi', 'required');
         if ($this->form_validation->run() === TRUE) {
             $user_data = [
                 'nama_lengkap' => $this->input->post('nama_lengkap', TRUE),
@@ -82,6 +86,10 @@ class Members extends CI_Controller
         $this->form_validation->set_rules('nama_lengkap', 'Nama Lengkap', 'required');
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
         $this->form_validation->set_rules('no_telepon', 'No Telepon', 'required');
+        $this->form_validation->set_rules('alamat', 'Alamat', 'required');
+        $this->form_validation->set_rules('kecamatan', 'Kecamatan', 'required');
+        $this->form_validation->set_rules('kota', 'Kota', 'required');
+        $this->form_validation->set_rules('provinsi', 'Provinsi', 'required');
         if ($this->form_validation->run() === TRUE) {
             $user_data = [
                 'nama_lengkap' => $this->input->post('nama_lengkap', TRUE),
@@ -144,6 +152,10 @@ class Members extends CI_Controller
         if ($this->input->post('password')) {
             $this->form_validation->set_rules('password', 'Password', 'min_length[6]');
         }
+        $this->form_validation->set_rules('alamat', 'Alamat', 'required');
+        $this->form_validation->set_rules('kecamatan', 'Kecamatan', 'required');
+        $this->form_validation->set_rules('kota', 'Kota', 'required');
+        $this->form_validation->set_rules('provinsi', 'Provinsi', 'required');
 
         if ($this->form_validation->run() === TRUE) {
             $user_data = [

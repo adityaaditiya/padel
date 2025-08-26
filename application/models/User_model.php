@@ -15,8 +15,12 @@ class User_model extends CI_Model
         if (isset($data['role']) && $data['role'] === 'pelanggan') {
             $kode_member = str_pad($user_id, 10, '0', STR_PAD_LEFT);
             $this->db->insert('member_data', [
-                'user_id' => $user_id,
-                'kode_member' => $kode_member
+                'user_id'   => $user_id,
+                'kode_member' => $kode_member,
+                'alamat'    => '',
+                'kecamatan' => '',
+                'kota'      => '',
+                'provinsi'  => ''
             ]);
         }
         return $user_id;
