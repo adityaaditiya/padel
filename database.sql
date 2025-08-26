@@ -50,12 +50,9 @@ CREATE TABLE sales (
   id INT AUTO_INCREMENT PRIMARY KEY,
   id_kasir INT NOT NULL,
   nomor_nota VARCHAR(50) NOT NULL UNIQUE,
-  id_member INT DEFAULT NULL,
-  atas_nama VARCHAR(100) DEFAULT NULL,
   total_belanja DECIMAL(10,2) NOT NULL,
   tanggal_transaksi DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (id_kasir) REFERENCES users(id),
-  FOREIGN KEY (id_member) REFERENCES users(id)
+  FOREIGN KEY (id_kasir) REFERENCES users(id)
 );
 
 CREATE TABLE sale_details (
