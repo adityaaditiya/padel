@@ -80,7 +80,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="4"><button type="submit" class="btn btn-secondary btn-sm">Update Qty</button></td>
+                          <th></th>
                             <th>Total</th>
                             <th id="cart-total">Rp <?php echo number_format($total, 0, ',', '.'); ?></th>
                         </tr>
@@ -96,6 +96,46 @@
             <p>Keranjang kosong.</p>
 <?php endif; ?>
     </div>
+</div>
+
+<!-- Modal pilih customer -->
+<div class="modal fade" id="memberModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Pilih Customer</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-inline mb-2">
+          <input type="text" id="member-search" class="form-control mr-2" placeholder="Cari customer">
+          <button type="button" id="member-search-btn" class="btn btn-primary btn-sm">Cari</button>
+        </div>
+        <table class="table table-bordered table-sm" id="member-table">
+          <thead>
+            <tr>
+              <th>Kode</th>
+              <th>Nama</th>
+              <th>Telepon</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+          <?php foreach ($members as $m): ?>
+            <tr>
+              <td><?php echo htmlspecialchars($m->kode_member); ?></td>
+              <td><?php echo htmlspecialchars($m->nama_lengkap); ?></td>
+              <td><?php echo htmlspecialchars($m->no_telepon); ?></td>
+              <td><button type="button" class="btn btn-sm btn-success select-member" data-id="<?php echo $m->id; ?>" data-name="<?php echo htmlspecialchars($m->nama_lengkap); ?>">Pilih</button></td>
+            </tr>
+          <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Modal pilih customer -->
@@ -204,7 +244,6 @@ qtyInputs.forEach(function(input) {
         recalcTotal();
     });
 });
-
 var memberSearchInput = document.getElementById('member-search');
 var memberSearchBtn = document.getElementById('member-search-btn');
 var memberTableBody = document.querySelector('#member-table tbody');
