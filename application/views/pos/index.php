@@ -48,6 +48,7 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
+
                             <th>Nota</th>
                             <th>Customer</th>
                             <th>Produk</th>
@@ -79,13 +80,13 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="4"><button type="submit" class="btn btn-secondary btn-sm">Update Qty</button></td>
                             <th>Total</th>
                             <th id="cart-total">Rp <?php echo number_format($total, 0, ',', '.'); ?></th>
                         </tr>
                     </tfoot>
                 </table>
             </form>
+
             <form method="post" action="<?php echo site_url('pos/checkout'); ?>" id="checkout-form">
                 <input type="hidden" name="device_date" id="device_date">
                 <input type="hidden" name="nota" value="<?php echo $nota; ?>">
