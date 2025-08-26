@@ -55,7 +55,18 @@ class Booking extends CI_Controller
         if (!$this->session->userdata('logged_in')) {
             redirect('auth/login');
         }
-        $error = $this->Store_model->validate_device_date($this->input->post('device_date'));
+        $device_date = $this->input->post('device_date');
+        if (!$device_date) {
+            $device_date = date('Y-m-d');
+        }
+        $tz = new DateTimeZone('Asia/Jakarta');
+        $dt = DateTime::createFromFormat('Y-m-d', $device_date, $tz);
+        if (!$dt || $dt->getTimezone()->getName() !== 'Asia/Jakarta') {
+            $this->session->set_flashdata('error', 'Tanggal perangkat tidak valid');
+            redirect('booking/create');
+            return;
+        }
+        $error = $this->Store_model->validate_device_date($dt->format('Y-m-d'));
         if ($error) {
             $this->session->set_flashdata('error', $error);
             redirect('booking/create');

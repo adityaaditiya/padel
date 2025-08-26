@@ -85,11 +85,11 @@ class Pos extends CI_Controller
         $data['sales'] = $this->Sale_model->get_all($from, $to);
         $this->load->view('pos/transactions', $data);
     }
-
     /**
      * Tambah produk ke keranjang.
      */
-    public function add($id)
+    
+  public function add($id)
     {
         $this->authorize();
         $product = $this->Product_model->get_by_id($id);
@@ -108,6 +108,32 @@ class Pos extends CI_Controller
             ];
         }
         $this->session->set_userdata('cart', $cart);
+        redirect('pos');
+    }
+    /**
+     * Perbarui jumlah masing-masing item di keranjang.
+     */
+    public function update_cart()
+    {
+        $this->authorize();
+        if ($this->input->method() !== 'post') {
+            redirect('pos');
+        }
+        $qtys = $this->input->post('qty');
+        $cart = $this->session->userdata('cart') ?: [];
+        if (is_array($qtys)) {
+            foreach ($qtys as $id => $qty) {
+                if (isset($cart[$id])) {
+                    $qty = (int) $qty;
+                    if ($qty > 0) {
+                        $cart[$id]['qty'] = $qty;
+                    } else {
+                        unset($cart[$id]);
+                    }
+                }
+            }
+            $this->session->set_userdata('cart', $cart);
+        }
         redirect('pos');
     }
 
@@ -161,7 +187,18 @@ class Pos extends CI_Controller
         if ($this->input->method() !== 'post') {
             redirect('pos');
         }
-        $error = $this->Store_model->validate_device_date($this->input->post('device_date'));
+        $device_date = $this->input->post('device_date');
+        if (!$device_date) {
+            $device_date = date('Y-m-d');
+        }
+        $tz = new DateTimeZone('Asia/Jakarta');
+        $dt = DateTime::createFromFormat('Y-m-d', $device_date, $tz);
+        if (!$dt || $dt->getTimezone()->getName() !== 'Asia/Jakarta') {
+            $this->session->set_flashdata('error', 'Tanggal perangkat tidak valid');
+            redirect('pos');
+            return;
+        }
+        $error = $this->Store_model->validate_device_date($dt->format('Y-m-d'));
         if ($error) {
             $this->session->set_flashdata('error', $error);
             redirect('pos');

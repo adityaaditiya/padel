@@ -26,19 +26,29 @@ class Cash extends CI_Controller
     {
         $this->authorize();
         if ($this->input->method() === 'post') {
-            $error = $this->Store_model->validate_device_date($this->input->post('device_date'));
-            if ($error) {
-                $this->session->set_flashdata('error', $error);
+            $device_date = $this->input->post('device_date');
+            if (!$device_date) {
+                $device_date = date('Y-m-d');
+            }
+            $tz = new DateTimeZone('Asia/Jakarta');
+            $dt = DateTime::createFromFormat('Y-m-d', $device_date, $tz);
+            if (!$dt || $dt->getTimezone()->getName() !== 'Asia/Jakarta') {
+                $this->session->set_flashdata('error', 'Tanggal perangkat tidak valid');
             } else {
-                $data = [
-                    'tanggal'  => date('Y-m-d H:i:s'),
-                    'type'     => 'in',
-                    'category' => $this->input->post('category'),
-                    'amount'   => (float) $this->input->post('amount'),
-                    'note'     => $this->input->post('note')
-                ];
-                $this->Cash_model->insert($data);
-                $this->session->set_flashdata('success', 'Kas masuk berhasil disimpan');
+                $error = $this->Store_model->validate_device_date($dt->format('Y-m-d'));
+                if ($error) {
+                    $this->session->set_flashdata('error', $error);
+                } else {
+                    $data = [
+                        'tanggal'  => date('Y-m-d H:i:s'),
+                        'type'     => 'in',
+                        'category' => $this->input->post('category'),
+                        'amount'   => (float) $this->input->post('amount'),
+                        'note'     => $this->input->post('note')
+                    ];
+                    $this->Cash_model->insert($data);
+                    $this->session->set_flashdata('success', 'Kas masuk berhasil disimpan');
+                }
             }
             redirect('cash/add');
         }
@@ -50,19 +60,29 @@ class Cash extends CI_Controller
     {
         $this->authorize();
         if ($this->input->method() === 'post') {
-            $error = $this->Store_model->validate_device_date($this->input->post('device_date'));
-            if ($error) {
-                $this->session->set_flashdata('error', $error);
+            $device_date = $this->input->post('device_date');
+            if (!$device_date) {
+                $device_date = date('Y-m-d');
+            }
+            $tz = new DateTimeZone('Asia/Jakarta');
+            $dt = DateTime::createFromFormat('Y-m-d', $device_date, $tz);
+            if (!$dt || $dt->getTimezone()->getName() !== 'Asia/Jakarta') {
+                $this->session->set_flashdata('error', 'Tanggal perangkat tidak valid');
             } else {
-                $data = [
-                    'tanggal'  => date('Y-m-d H:i:s'),
-                    'type'     => 'out',
-                    'category' => $this->input->post('category'),
-                    'amount'   => (float) $this->input->post('amount'),
-                    'note'     => $this->input->post('note')
-                ];
-                $this->Cash_model->insert($data);
-                $this->session->set_flashdata('success', 'Kas keluar berhasil disimpan');
+                $error = $this->Store_model->validate_device_date($dt->format('Y-m-d'));
+                if ($error) {
+                    $this->session->set_flashdata('error', $error);
+                } else {
+                    $data = [
+                        'tanggal'  => date('Y-m-d H:i:s'),
+                        'type'     => 'out',
+                        'category' => $this->input->post('category'),
+                        'amount'   => (float) $this->input->post('amount'),
+                        'note'     => $this->input->post('note')
+                    ];
+                    $this->Cash_model->insert($data);
+                    $this->session->set_flashdata('success', 'Kas keluar berhasil disimpan');
+                }
             }
             redirect('cash/withdraw');
         }
