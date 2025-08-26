@@ -16,7 +16,11 @@
     </div>
     <div class="form-group">
         <label for="kategori">Kategori</label>
-        <input type="text" name="kategori" id="kategori" class="form-control" value="<?php echo set_value('kategori', $product->kategori); ?>">
+        <select name="kategori" id="kategori" class="form-control">
+            <?php foreach ($categories as $cat): ?>
+            <option value="<?php echo $cat; ?>" <?php echo set_select('kategori', $cat, $product->kategori === $cat); ?>><?php echo ucwords($cat); ?></option>
+            <?php endforeach; ?>
+        </select>
     </div>
     <button type="submit" class="btn btn-primary">Update</button>
     <a href="<?php echo site_url('products'); ?>" class="btn btn-secondary">Batal</a>

@@ -42,7 +42,7 @@ CREATE TABLE products (
   nama_produk VARCHAR(100) NOT NULL,
   harga_jual DECIMAL(10,2) NOT NULL,
   stok INT NOT NULL,
-  kategori VARCHAR(50),
+  kategori ENUM('makanan','snack','cofee','non cofee','tea') NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
