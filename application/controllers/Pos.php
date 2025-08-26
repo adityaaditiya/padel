@@ -158,18 +158,7 @@ class Pos extends CI_Controller
         if ($this->input->method() !== 'post') {
             redirect('pos');
         }
-        $device_date = $this->input->post('device_date');
-        if (!$device_date) {
-            $device_date = date('Y-m-d');
-        }
-        $tz = new DateTimeZone('Asia/Jakarta');
-        $dt = DateTime::createFromFormat('Y-m-d', $device_date, $tz);
-        if (!$dt || $dt->getTimezone()->getName() !== 'Asia/Jakarta') {
-            $this->session->set_flashdata('error', 'Tanggal perangkat tidak valid');
-            redirect('pos');
-            return;
-        }
-        $error = $this->Store_model->validate_device_date($dt->format('Y-m-d'));
+        $error = $this->Store_model->validate_device_date($this->input->post('device_date'));
         if ($error) {
             $this->session->set_flashdata('error', $error);
             redirect('pos');
