@@ -32,7 +32,8 @@ class Store extends CI_Controller
     public function open()
     {
         $this->authorize();
-        $date    = $this->input->post('store_date');
+        $role    = $this->session->userdata('role');
+        $date    = $role === 'owner' ? $this->input->post('store_date') : null;
         $current = $this->Store_model->get_current();
         if (!$date && $current) {
             $date = $current->store_date;
