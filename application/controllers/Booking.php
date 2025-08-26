@@ -53,7 +53,7 @@ class Booking extends CI_Controller
                 empty($member->kota) ||
                 empty($member->provinsi)
             ) {
-                $this->session->set_flashdata('error', 'Lengkapi data member pada menu setting data member untuk melanjutkan booking.');
+                $this->session->set_flashdata('error', 'Lengkapi data member dulu untuk melanjutkan booking.');
                 redirect('members/profile');
                 return;
             }
