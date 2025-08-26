@@ -179,7 +179,8 @@ class Pos extends CI_Controller
         $saleData = [
             'id_kasir'      => $this->session->userdata('id'),
             'nomor_nota'    => $nomor_nota,
-            'total_belanja' => $total
+            'total_belanja' => $total,
+            'customer_id'   => $this->input->post('customer_id') ?: null
         ];
         $sale_id = $this->Sale_model->insert($saleData);
         // Simpan detail dan update stok
