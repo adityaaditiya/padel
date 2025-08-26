@@ -69,6 +69,11 @@ class Booking extends CI_Controller
         if ($this->form_validation->run() === TRUE) {
             $id_court = $this->input->post('id_court');
             $date     = $this->input->post('tanggal_booking');
+            if (strtotime($date) < strtotime(date('Y-m-d'))) {
+                $this->session->set_flashdata('error', 'Tanggal booking tidak boleh sebelum hari ini.');
+                redirect('booking/create');
+                return;
+            }
             $start    = $this->input->post('jam_mulai');
             $end      = $this->input->post('jam_selesai');
             $durasi   = (strtotime($end) - strtotime($start)) / 3600;
