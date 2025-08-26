@@ -40,6 +40,7 @@ $formatted_store_date = $store_date ? date('d-m-Y', strtotime($store_date)) : da
                         <a class="nav-link dropdown-toggle" href="#" id="posDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">POS</a>
                         <div class="dropdown-menu" aria-labelledby="posDropdown">
                             <a class="dropdown-item" href="<?php echo site_url('pos'); ?>">Tambah Transaksi</a>
+                            <a class="dropdown-item" href="<?php echo site_url('pos/transactions'); ?>">Lihat Transaksi</a>
                             <a class="dropdown-item" href="<?php echo site_url('products'); ?>">Tambah Produk</a>
                         </div>
                     </li>

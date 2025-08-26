@@ -9,7 +9,7 @@ class Pos extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(['Product_model','Sale_model','Sale_detail_model','Payment_model','Store_model']);
+        $this->load->model(['Product_model','Sale_model','Sale_detail_model','Payment_model','Store_model','Member_model']);
         $this->load->library('session');
         $this->load->helper(['url']);
     }
@@ -31,14 +31,59 @@ class Pos extends CI_Controller
     public function index()
     {
         $this->authorize();
-        $data['products'] = $this->Product_model->get_all();
+        $kategori = $this->input->get('kategori');
+        $keyword  = $this->input->get('q');
+        $data['products'] = $this->Product_model->get_filtered($kategori, $keyword);
+        $data['categories'] = $this->Product_model->get_categories();
+        $data['selected_category'] = $kategori;
+        $data['search_query'] = $keyword;
         $data['cart'] = $this->session->userdata('cart') ?: [];
         $data['total'] = 0;
         foreach ($data['cart'] as $item) {
             $data['total'] += $item['harga_jual'] * $item['qty'];
         }
         $data['store'] = $this->Store_model->get_current();
+        $data['nota'] = $this->Payment_model->get_next_sale_id();
+        $data['members'] = $this->Member_model->get_all();
         $this->load->view('pos/index', $data);
+    }
+
+    /**
+     * Endpoint AJAX untuk pencarian member.
+     */
+    public function member_search()
+    {
+        $this->authorize();
+        $keyword = $this->input->get('q');
+        $members = $this->Member_model->search($keyword);
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($members));
+    }
+
+    /**
+     * Endpoint AJAX untuk mengambil daftar produk terfilter.
+     */
+    public function search()
+    {
+        $this->authorize();
+        $kategori = $this->input->get('kategori');
+        $keyword  = $this->input->get('q');
+        $products = $this->Product_model->get_filtered($kategori, $keyword);
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($products));
+    }
+
+    public function transactions()
+    {
+        $this->authorize();
+        $from = $this->input->get('from');
+        $to   = $this->input->get('to');
+        $data['from'] = $from;
+        $data['to'] = $to;
+        $data['sales'] = $this->Sale_model->get_all($from, $to);
+        $this->load->view('pos/transactions', $data);
     }
 
     /**
@@ -63,6 +108,33 @@ class Pos extends CI_Controller
             ];
         }
         $this->session->set_userdata('cart', $cart);
+        redirect('pos');
+    }
+
+    /**
+     * Perbarui jumlah masing-masing item di keranjang.
+     */
+    public function update_cart()
+    {
+        $this->authorize();
+        if ($this->input->method() !== 'post') {
+            redirect('pos');
+        }
+        $qtys = $this->input->post('qty');
+        $cart = $this->session->userdata('cart') ?: [];
+        if (is_array($qtys)) {
+            foreach ($qtys as $id => $qty) {
+                if (isset($cart[$id])) {
+                    $qty = (int) $qty;
+                    if ($qty > 0) {
+                        $cart[$id]['qty'] = $qty;
+                    } else {
+                        unset($cart[$id]);
+                    }
+                }
+            }
+            $this->session->set_userdata('cart', $cart);
+        }
         redirect('pos');
     }
 
@@ -111,7 +183,8 @@ class Pos extends CI_Controller
         $saleData = [
             'id_kasir'      => $this->session->userdata('id'),
             'nomor_nota'    => $nomor_nota,
-            'total_belanja' => $total
+            'total_belanja' => $total,
+            'customer_id'   => $this->input->post('customer_id') ?: null
         ];
         $sale_id = $this->Sale_model->insert($saleData);
         // Simpan detail dan update stok
