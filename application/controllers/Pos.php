@@ -9,7 +9,7 @@ class Pos extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(['Product_model','Sale_model','Sale_detail_model','Payment_model','Store_model']);
+        $this->load->model(['Product_model','Sale_model','Sale_detail_model','Payment_model','Store_model','Member_model']);
         $this->load->library('session');
         $this->load->helper(['url']);
     }
@@ -31,12 +31,25 @@ class Pos extends CI_Controller
     public function index()
     {
         $this->authorize();
-        $data['products'] = $this->Product_model->get_all();
+        $kategori = $this->input->get('kategori');
+        $search   = $this->input->get('q');
+        $data['selected_category'] = $kategori;
+        $data['search_query']      = $search;
+        $data['products'] = $this->Product_model->get_all($kategori, $search);
+        $data['categories'] = $this->Product_model->get_categories();
         $data['cart'] = $this->session->userdata('cart') ?: [];
         $data['total'] = 0;
         foreach ($data['cart'] as $item) {
             $data['total'] += $item['harga_jual'] * $item['qty'];
         }
+        $nomor_nota = $this->session->userdata('nomor_nota');
+        if (!$nomor_nota) {
+            $nomor_nota = 'INV-' . time();
+            $this->session->set_userdata('nomor_nota', $nomor_nota);
+        }
+        $data['nomor_nota'] = $nomor_nota;
+        $data['members'] = $this->Member_model->get_all();
+        $data['store'] = $this->Store_model->get_current();
         $this->load->view('pos/index', $data);
     }
 
@@ -80,6 +93,28 @@ class Pos extends CI_Controller
     }
 
     /**
+     * Update kuantitas banyak produk sekaligus.
+     */
+    public function update_cart()
+    {
+        $this->authorize();
+        if ($this->input->method() !== 'post') {
+            redirect('pos');
+        }
+        $cart = $this->session->userdata('cart') ?: [];
+        $qtys = $this->input->post('qty');
+        if (is_array($qtys)) {
+            foreach ($qtys as $id => $qty) {
+                if (isset($cart[$id])) {
+                    $cart[$id]['qty'] = max(1, (int)$qty);
+                }
+            }
+            $this->session->set_userdata('cart', $cart);
+        }
+        redirect('pos');
+    }
+
+    /**
      * Simpan transaksi penjualan dan kosongkan keranjang.
      */
     public function checkout()
@@ -105,12 +140,13 @@ class Pos extends CI_Controller
         foreach ($cart as $item) {
             $total += $item['harga_jual'] * $item['qty'];
         }
-        // Buat nomor nota sederhana
-        $nomor_nota = 'INV-' . time();
+        $nomor_nota = $this->session->userdata('nomor_nota');
         $saleData = [
             'id_kasir'      => $this->session->userdata('id'),
             'nomor_nota'    => $nomor_nota,
-            'total_belanja' => $total
+            'total_belanja' => $total,
+            'id_member'     => $this->input->post('member_id') ?: null,
+            'atas_nama'     => $this->input->post('member_id') ? null : $this->input->post('atas_nama')
         ];
         $sale_id = $this->Sale_model->insert($saleData);
         // Simpan detail dan update stok
@@ -133,8 +169,9 @@ class Pos extends CI_Controller
             'id_kasir'       => $this->session->userdata('id')
         ];
         $this->Payment_model->insert($payment);
-        // Kosongkan keranjang
+        // Kosongkan keranjang dan nomor nota
         $this->session->unset_userdata('cart');
+        $this->session->unset_userdata('nomor_nota');
         $this->session->set_flashdata('success', 'Transaksi berhasil disimpan.');
         redirect('pos');
     }

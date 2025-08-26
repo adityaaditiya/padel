@@ -8,9 +8,26 @@ class Product_model extends CI_Model
 {
     protected $table = 'products';
 
-    public function get_all()
+    /**
+     * Ambil semua produk dengan opsi filter kategori dan pencarian nama.
+     */
+    public function get_all($kategori = null, $search = null)
     {
+        if ($kategori) {
+            $this->db->where('kategori', $kategori);
+        }
+        if ($search) {
+            $this->db->like('nama_produk', $search);
+        }
         return $this->db->get($this->table)->result();
+    }
+
+    /**
+     * Ambil daftar kategori yang tersedia.
+     */
+    public function get_categories()
+    {
+        return $this->db->select('kategori')->distinct()->get($this->table)->result();
     }
 
     public function get_by_id($id)

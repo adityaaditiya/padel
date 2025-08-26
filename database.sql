@@ -42,7 +42,7 @@ CREATE TABLE products (
   nama_produk VARCHAR(100) NOT NULL,
   harga_jual DECIMAL(10,2) NOT NULL,
   stok INT NOT NULL,
-  kategori VARCHAR(50),
+  kategori ENUM('makanan','snack','cofee','non cofee','tea') NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -50,9 +50,12 @@ CREATE TABLE sales (
   id INT AUTO_INCREMENT PRIMARY KEY,
   id_kasir INT NOT NULL,
   nomor_nota VARCHAR(50) NOT NULL UNIQUE,
+  id_member INT DEFAULT NULL,
+  atas_nama VARCHAR(100) DEFAULT NULL,
   total_belanja DECIMAL(10,2) NOT NULL,
   tanggal_transaksi DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (id_kasir) REFERENCES users(id)
+  FOREIGN KEY (id_kasir) REFERENCES users(id),
+  FOREIGN KEY (id_member) REFERENCES users(id)
 );
 
 CREATE TABLE sale_details (
@@ -95,3 +98,14 @@ CREATE TABLE store_status (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+
+CREATE TABLE member_data (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  kode_member CHAR(10) NOT NULL,
+  alamat VARCHAR(255) DEFAULT NULL,
+  kecamatan VARCHAR(100) DEFAULT NULL,
+  kota VARCHAR(100) DEFAULT NULL,
+  provinsi VARCHAR(100) DEFAULT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
