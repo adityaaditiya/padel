@@ -11,17 +11,36 @@
 <div class="row">
     <div class="col-md-6">
         <h4>Daftar Produk</h4>
-        <div class="list-group">
-        <?php foreach ($products as $p): ?>
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                    <strong><?php echo htmlspecialchars($p->nama_produk); ?></strong><br>
-                    <small>Rp <?php echo number_format($p->harga_jual, 0, ',', '.'); ?></small>
-                </div>
-                <a href="<?php echo site_url('pos/add/'.$p->id); ?>" class="btn btn-sm btn-success">Tambah</a>
-            </div>
-        <?php endforeach; ?>
-        </div>
+        <form method="get" class="form-inline mb-2">
+            <select name="kategori" class="form-control mr-2">
+                <option value="">Semua Kategori</option>
+                <?php foreach ($categories as $c): ?>
+                    <option value="<?php echo $c->kategori; ?>" <?php echo ($selected_category == $c->kategori) ? 'selected' : ''; ?>><?php echo htmlspecialchars($c->kategori); ?></option>
+                <?php endforeach; ?>
+            </select>
+            <input type="text" name="q" value="<?php echo htmlspecialchars($search_query); ?>" class="form-control mr-2" placeholder="Cari produk">
+            <button type="submit" class="btn btn-secondary">Filter</button>
+        </form>
+        <table class="table table-sm table-bordered">
+            <thead>
+                <tr>
+                    <th>Produk</th>
+                    <th>Harga</th>
+                    <th>Kategori</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($products as $p): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($p->nama_produk); ?></td>
+                    <td>Rp <?php echo number_format($p->harga_jual, 0, ',', '.'); ?></td>
+                    <td><?php echo htmlspecialchars($p->kategori); ?></td>
+                    <td><a href="<?php echo site_url('pos/add/'.$p->id); ?>" class="btn btn-sm btn-success">Tambah</a></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
     <div class="col-md-6">
         <h4>Keranjang</h4>
