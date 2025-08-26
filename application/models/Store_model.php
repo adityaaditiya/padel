@@ -12,6 +12,15 @@ class Store_model extends CI_Model
 
     public function open($date)
     {
+        $current = $this->get_current();
+        if ($current) {
+            return $this->db->where('id', $current->id)
+                            ->update($this->table, [
+                                'store_date' => $date,
+                                'is_open'    => 1,
+                                'closed_at'  => NULL
+                            ]);
+        }
         return $this->db->insert($this->table, [
             'store_date' => $date,
             'is_open'    => 1
@@ -22,12 +31,16 @@ class Store_model extends CI_Model
     {
         $current = $this->get_current();
         if ($current && $current->is_open) {
+            $next_date = date('Y-m-d', strtotime($current->store_date . ' +1 day'));
             $this->db->where('id', $current->id)
                      ->update($this->table, [
-                         'is_open'   => 0,
-                         'closed_at' => date('Y-m-d H:i:s')
+                         'is_open'    => 0,
+                         'closed_at'  => date('Y-m-d H:i:s'),
+                         'store_date' => $next_date
                      ]);
+            return $next_date;
         }
+        return NULL;
     }
 
     public function validate_device_date($device_date)
