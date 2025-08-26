@@ -37,6 +37,7 @@ class Pos extends CI_Controller
         foreach ($data['cart'] as $item) {
             $data['total'] += $item['harga_jual'] * $item['qty'];
         }
+        $data['store'] = $this->Store_model->get_current();
         $this->load->view('pos/index', $data);
     }
 
