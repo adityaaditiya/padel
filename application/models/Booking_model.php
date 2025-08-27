@@ -10,9 +10,13 @@ class Booking_model extends CI_Model
 
     public function get_by_date($date)
     {
-        $this->db->where('tanggal_booking', $date);
-        $this->db->where('status_booking !=', 'batal');
-        return $this->db->get($this->table)->result();
+        return $this->db->select('bookings.*, m.kode_member')
+                        ->from($this->table)
+                        ->join('member_data m', 'm.user_id = bookings.id_user', 'left')
+                        ->where('bookings.tanggal_booking', $date)
+                        ->where('bookings.status_booking !=', 'batal')
+                        ->get()
+                        ->result();
     }
 
     public function insert($data)
