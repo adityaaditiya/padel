@@ -1,5 +1,14 @@
 <?php $this->load->view('templates/header'); ?>
-<?php $role = $this->session->userdata('role'); ?>
+<?php $role  = $this->session->userdata('role'); ?>
+<?php $sort  = isset($sort) ? $sort : 'jam_mulai'; ?>
+<?php $order = isset($order) ? $order : 'asc'; ?>
+<?php
+function booking_sort_url($field, $date, $sort, $order)
+{
+    $next = ($sort === $field && $order === 'asc') ? 'desc' : 'asc';
+    return site_url('booking') . '?date=' . urlencode($date) . '&sort=' . $field . '&order=' . $next;
+}
+?>
 <h2>Jadwal Booking Lapangan</h2>
 <form method="get" class="form-inline mb-3">
     <label for="date" class="mr-2">Tanggal:</label>
@@ -12,12 +21,12 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>Lapangan</th>
-                <th>Kode Member</th>
-                <th>Jam Mulai</th>
-                <th>Jam Selesai</th>
-                <th>Status</th>
-                <th>Keterangan</th>
+                <th><a href="<?php echo htmlspecialchars(booking_sort_url('id_court', $date, $sort, $order)); ?>">Lapangan</a></th>
+                <th><a href="<?php echo htmlspecialchars(booking_sort_url('kode_member', $date, $sort, $order)); ?>">Kode Member</a></th>
+                <th><a href="<?php echo htmlspecialchars(booking_sort_url('jam_mulai', $date, $sort, $order)); ?>">Jam Mulai</a></th>
+                <th><a href="<?php echo htmlspecialchars(booking_sort_url('jam_selesai', $date, $sort, $order)); ?>">Jam Selesai</a></th>
+                <th><a href="<?php echo htmlspecialchars(booking_sort_url('status_booking', $date, $sort, $order)); ?>">Status</a></th>
+                <th><a href="<?php echo htmlspecialchars(booking_sort_url('keterangan', $date, $sort, $order)); ?>">Keterangan</a></th>
                 <?php if ($role === 'kasir'): ?>
                     <th>Aksi</th>
                 <?php endif; ?>

@@ -8,13 +8,23 @@ class Booking_model extends CI_Model
 {
     protected $table = 'bookings';
 
-    public function get_by_date($date)
+    public function get_by_date($date, $sort = 'jam_mulai', $order = 'asc')
     {
-        return $this->db->select('bookings.*, m.kode_member')
+        $allowed = [
+            'id_court'       => 'bookings.id_court',
+            'kode_member'    => 'm.kode_member',
+            'jam_mulai'      => 'bookings.jam_mulai',
+            'jam_selesai'    => 'bookings.jam_selesai',
+            'status_booking' => 'bookings.status_booking',
+            'keterangan'     => 'bookings.keterangan'
+        ];
+        $sort_field = isset($allowed[$sort]) ? $allowed[$sort] : $allowed['jam_mulai'];
+        $order      = strtolower($order) === 'desc' ? 'desc' : 'asc';
                         ->from($this->table)
                         ->join('member_data m', 'm.user_id = bookings.id_user', 'left')
                         ->where('bookings.tanggal_booking', $date)
                         ->where('bookings.status_booking !=', 'batal')
+                        ->order_by($sort_field, $order)
                         ->get()
                         ->result();
     }
