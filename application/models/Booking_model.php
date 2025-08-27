@@ -20,6 +20,7 @@ class Booking_model extends CI_Model
         ];
         $sort_field = isset($allowed[$sort]) ? $allowed[$sort] : $allowed['jam_mulai'];
         $order      = strtolower($order) === 'desc' ? 'desc' : 'asc';
+        return $this->db->select('bookings.*, m.kode_member')
                         ->from($this->table)
                         ->join('member_data m', 'm.user_id = bookings.id_user', 'left')
                         ->where('bookings.tanggal_booking', $date)

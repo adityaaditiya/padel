@@ -17,4 +17,14 @@ class Sale_detail_model extends CI_Model
     {
         return $this->db->get_where($this->table, ['id_sale' => $sale_id])->result();
     }
+
+    public function get_with_product($sale_id)
+    {
+        return $this->db->select('sd.*, p.nama_produk, p.harga_jual')
+                        ->from($this->table . ' sd')
+                        ->join('products p', 'p.id = sd.id_product')
+                        ->where('sd.id_sale', $sale_id)
+                        ->get()
+                        ->result();
+    }
 }
