@@ -28,9 +28,13 @@ class Booking extends CI_Controller
         if (!$date) {
             $date = date('Y-m-d');
         }
-        $data['date'] = $date;
-        $data['courts'] = $this->Court_model->get_all();
-        $data['bookings'] = $this->Booking_model->get_by_date($date);
+        $sort  = $this->input->get('sort') ?: 'jam_mulai';
+        $order = $this->input->get('order') ?: 'asc';
+        $data['date']  = $date;
+        $data['sort']  = $sort;
+        $data['order'] = $order;
+        $data['courts']   = $this->Court_model->get_all();
+        $data['bookings'] = $this->Booking_model->get_by_date($date, $sort, $order);
         $this->load->view('booking/index', $data);
     }
 
