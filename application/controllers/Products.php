@@ -92,11 +92,34 @@ class Products extends CI_Controller
         $this->edit($id);
     }
 
+    // public function delete($id)
+    // {
+    //     $this->authorize();
+    //     $this->Product_model->delete($id);
+    //     $this->session->set_flashdata('success', 'Produk berhasil dihapus.');
+    //     redirect('products');
+    // }
+
+
     public function delete($id)
-    {
-        $this->authorize();
-        $this->Product_model->delete($id);
+{
+    $this->db->trans_start();
+    $this->db->where('id', $id)->delete('products');
+    $this->db->trans_complete();
+
+    if ($this->db->trans_status() === FALSE) {
+        $err = $this->db->error(); // ['code'=>1451, 'message'=>...]
+        if ($err['code'] == 1451) {
+            $this->session->set_flashdata('error',
+                'Produk tidak bisa dihapus karena sudah dipakai di transaksi. ' .
+                'Anda bisa menonaktifkan produk atau alihkan transaksinya ke produk lain.');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal menghapus produk: '.$err['message']);
+        }
+    } else {
         $this->session->set_flashdata('success', 'Produk berhasil dihapus.');
-        redirect('products');
     }
+    redirect('products');
+}
+
 }

@@ -222,33 +222,64 @@ class Pos extends CI_Controller
     }
 
     private function print_receipt($sale_id)
-    {
-        $sale = $this->Sale_model->get_by_id($sale_id);
-        $details = $this->Sale_detail_model->get_with_product($sale_id);
-        $payments = $this->Payment_model->get_by_sale($sale_id);
+{
+    // Pastikan autoload sudah aktif (lihat langkah 2)
+    $sale     = $this->Sale_model->get_by_id($sale_id);
+    $details  = $this->Sale_detail_model->get_with_product($sale_id);
+    $payments = $this->Payment_model->get_by_sale($sale_id);
+
+    try {
+        $profile = \Mike42\Escpos\CapabilityProfile::load('T82X');
+    } catch (\Throwable $e1) {
         try {
-            $profile = CapabilityProfile::load('TM-T82X');
-        } catch (Exception $e) {
-            $profile = CapabilityProfile::load('default');
+            $profile = \Mike42\Escpos\CapabilityProfile::load('simple');
+        } catch (\Throwable $e2) {
+            $profile = \Mike42\Escpos\CapabilityProfile::load('default');
         }
-        $connector = new WindowsPrintConnector('EPSON TM-T82X Receipt');
-        $printer = new Printer($connector, $profile);
-        $printer->setJustification(Printer::JUSTIFY_CENTER);
+    }
+
+    // === Gunakan FQCN supaya tidak perlu "use" ===
+    $connector = new \Mike42\Escpos\PrintConnectors\NetworkPrintConnector('192.168.88.157', 9100);
+    $printer   = null;
+
+    try { 
+        $printer = new \Mike42\Escpos\Printer($connector, $profile);
+    
+        $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_CENTER);
         $printer->text("Padel Store\n");
+        $printer->text(date("d-m-Y H:i") . "\n");
         $printer->text("Nota: {$sale->nomor_nota}\n");
         $printer->text(str_repeat('-', 32) . "\n");
-        $printer->setJustification(Printer::JUSTIFY_LEFT);
+    
+        $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_LEFT);
         foreach ($details as $d) {
-            $line = sprintf("%s\n%dx %s\n", $d->nama_produk, $d->jumlah, number_format($d->harga_jual,0,',','.'));
-            $printer->text($line);
+            // Hitung subtotal per produk
+            $subtotal = $d->jumlah * $d->harga_jual;
+    
+            // Nama produk
+            $printer->text($d->nama_produk . "\n");
+            // Cetak: qty x harga = subtotal
+            $printer->text(
+                $d->jumlah . "x " .
+                number_format($d->harga_jual, 0, ',', '.') .
+                " = " . number_format($subtotal, 0, ',', '.') . "\n"
+            );
         }
+    
         $printer->text(str_repeat('-', 32) . "\n");
-        $printer->text('Total: Rp ' . number_format($sale->total_belanja,0,',','.') . "\n");
-        if (!empty($payments)) {
-            $printer->text('Bayar: Rp ' . number_format($payments[0]->jumlah_bayar,0,',','.') . "\n");
-        }
+        $printer->text('Total: Rp ' . number_format($sale->total_belanja, 0, ',', '.') . "\n");
+    
         $printer->feed(2);
         $printer->cut();
-        $printer->close();
+    } catch (\Throwable $e) {
+        echo "Gagal print: " . $e->getMessage();
+    } finally {
+        if ($printer) {
+            $printer->close();
+        }
     }
+    
+}
+
+    
 }

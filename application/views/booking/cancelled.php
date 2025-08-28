@@ -2,7 +2,7 @@
 <h2>Booking Batal</h2>
 <form method="get" action="<?php echo site_url('booking/cancelled'); ?>" class="form-inline mb-3">
     <label for="date" class="mr-2">Tanggal:</label>
-    <input type="date" id="date" name="date" class="form-control mr-2" value="<?php echo htmlspecialchars($date); ?>">
+    <input type="date" id="date" name="date" class="form-control mr-2" value="<?php echo set_value('', date('Y-m-d')); ?>">
     <button type="submit" class="btn btn-primary">Lihat</button>
 </form>
 
